@@ -8,6 +8,7 @@ function toProfile(row: {
   id: string;
   full_name: string;
   currency: string;
+  allocation_target: number;
   created_at: string;
   updated_at: string;
 }, email: string): Profile {
@@ -16,6 +17,7 @@ function toProfile(row: {
     fullName: row.full_name,
     email,
     currency: row.currency,
+    allocationTarget: row.allocation_target,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -30,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loadProfile = useCallback(async (user: User) => {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, full_name, currency, created_at, updated_at")
+      .select("id, full_name, currency, allocation_target, created_at, updated_at")
       .eq("id", user.id)
       .maybeSingle();
 

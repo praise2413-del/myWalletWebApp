@@ -10,6 +10,10 @@ PostgreSQL via Supabase. Source of truth for schema is `supabase/migrations/` �
 
 **`transactions`** — `user_id`, `category_id`, `type`, `amount` (`numeric(14,2)`, `CHECK (amount > 0)`), `transaction_date`, `note`. Indexed on `user_id`, `category_id`, `transaction_date`, `type`.
 
+**`allocations`** — `user_id`, `type` (`SAVING` | `INVESTMENT`), `amount` (`numeric(14,2)`, `CHECK (amount > 0)`), `allocation_date`, `note`. Indexed on `user_id`, `allocation_date`, `type`. Deliberately **not** part of `transactions` and never counted as an expense — money a user sets aside or invests is a distinct concept from money consumed by spending. See `docs/insights.md` for the Savings & Investment Allocation feature this powers.
+
+`profiles.allocation_target` (`numeric(5,2)`, `CHECK (0–100)`, default `30`) — the user's personal Savings & Investment Allocation target, as a percentage of income. Configurable in Settings → Preferences.
+
 ## Enforcement that can't be a CHECK constraint
 
 A transaction's `type` must match its category's `type`, and the category must belong to the same user. Postgres `CHECK` constraints can't do cross-table lookups, so this is a `BEFORE INSERT OR UPDATE` trigger: `enforce_transaction_category_type()`.
@@ -20,7 +24,7 @@ A transaction's `type` must match its category's `type`, and the category must b
 
 ## RLS
 
-Every table has `ROW LEVEL SECURITY` enabled with `auth.uid() = user_id` (or `= id` for `profiles`) policies for select/insert/update, and delete besides `categories`, whose delete policy additionally requires `is_default = false` — default categories can be edited but not removed. See `docs/security.md` (added in the QA phase) for the full threat-model writeup; the policies themselves are the enforcement, not a UI convention.
+Every table (`profiles`, `categories`, `transactions`, `allocations`) has `ROW LEVEL SECURITY` enabled with `auth.uid() = user_id` (or `= id` for `profiles`) policies for select/insert/update, and delete besides `categories`, whose delete policy additionally requires `is_default = false` — default categories can be edited but not removed. See `docs/security.md` (added in the QA phase) for the full threat-model writeup; the policies themselves are the enforcement, not a UI convention.
 
 ## Applying migrations
 

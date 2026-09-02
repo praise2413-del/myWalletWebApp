@@ -39,6 +39,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      allocations: {
+        Row: {
+          allocation_date: string
+          amount: number
+          created_at: string
+          id: string
+          note: string | null
+          type: Database["public"]["Enums"]["allocation_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allocation_date?: string
+          amount: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          type: Database["public"]["Enums"]["allocation_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allocation_date?: string
+          amount?: number
+          created_at?: string
+          id?: string
+          note?: string | null
+          type?: Database["public"]["Enums"]["allocation_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -74,6 +107,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          allocation_target: number
           created_at: string
           currency: string
           full_name: string
@@ -81,6 +115,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          allocation_target?: number
           created_at?: string
           currency?: string
           full_name?: string
@@ -88,6 +123,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          allocation_target?: number
           created_at?: string
           currency?: string
           full_name?: string
@@ -148,6 +184,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      allocation_type: "SAVING" | "INVESTMENT"
       transaction_type: "INCOME" | "EXPENSE"
     }
     CompositeTypes: {
@@ -279,6 +316,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      allocation_type: ["SAVING", "INVESTMENT"],
       transaction_type: ["INCOME", "EXPENSE"],
     },
   },

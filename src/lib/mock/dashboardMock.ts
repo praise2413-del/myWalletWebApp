@@ -67,3 +67,8 @@ export const MOCK_DASHBOARD_INSIGHT = {
   title: "Food represents 35% of your expenses this month.",
   body: "You spent TZS 196,000 on Food, which is 12% higher than last month.",
 };
+
+export const MOCK_ALLOCATION = {
+  savings: 300_000,
+  investment: 240_000,
+};

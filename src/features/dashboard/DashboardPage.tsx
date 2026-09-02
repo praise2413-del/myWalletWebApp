@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PeriodSelector } from "@/components/ui/PeriodSelector";
+import { AllocationCard } from "@/features/dashboard/components/AllocationCard";
 import { FinancialInsightCard } from "@/features/dashboard/components/FinancialInsightCard";
 import { RecentTransactionsCard } from "@/features/dashboard/components/RecentTransactionsCard";
 import { SpendingOverviewCard } from "@/features/dashboard/components/SpendingOverviewCard";
@@ -7,6 +8,7 @@ import { SpendingTrendCard } from "@/features/dashboard/components/SpendingTrend
 import { StatCard } from "@/features/dashboard/components/StatCard";
 import { TopCategoriesCard } from "@/features/dashboard/components/TopCategoriesCard";
 import {
+  MOCK_ALLOCATION,
   MOCK_DASHBOARD_INSIGHT,
   MOCK_RECENT_TRANSACTIONS,
   MOCK_SPENDING_BY_CATEGORY,
@@ -86,7 +88,16 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <SpendingTrendCard data={MOCK_SPENDING_TREND} currency={currency} />
         </div>
-        <TopCategoriesCard data={MOCK_SPENDING_BY_CATEGORY} currency={currency} />
+        <div className="flex flex-col gap-4">
+          <TopCategoriesCard data={MOCK_SPENDING_BY_CATEGORY} currency={currency} />
+          <AllocationCard
+            income={MOCK_SUMMARY.income}
+            savings={MOCK_ALLOCATION.savings}
+            investment={MOCK_ALLOCATION.investment}
+            target={profile?.allocationTarget ?? 30}
+            currency={currency}
+          />
+        </div>
       </div>
     </div>
   );

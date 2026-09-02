@@ -11,13 +11,14 @@ myWallet isn't just a place to log transactions — it computes reports and gene
 - Email/password authentication with session persistence
 - Fast income/expense entry with categories, notes, and dates
 - Searchable, filterable, paginated transaction history
-- Dashboard: balance, income, expenses, net cash flow, spending overview, recent activity
+- Dashboard: balance, income, expenses, net cash flow, spending overview, recent activity, savings & investment allocation
 - Reports: daily/weekly/monthly/yearly/custom periods, category distribution, spending trend, category comparison, income vs. expense, period-over-period comparison
-- Insights: rule-based descriptive, comparative, and behavioral observations
+- Insights: rule-based descriptive, comparative, behavioral, and savings/investment-allocation observations — never generative AI, never financial advice
+- Savings & Investment Allocation: track money set aside as savings or investment (kept distinct from expenses), compare against a personal target (default 30%, configurable)
 - Category management with sensible defaults and custom categories
 - Light/dark/system theme, fully responsive (desktop/tablet/mobile)
 
-See [docs/ui-design.md](docs/ui-design.md) for the design system and [docs/architecture.md](docs/architecture.md) for project structure. Additional docs (`database`, `security`, `reports`, `insights`, `testing`, `deployment`) are added as each phase lands.
+See [docs/ui-design.md](docs/ui-design.md) for the design system, [docs/architecture.md](docs/architecture.md) for project structure, [docs/database.md](docs/database.md) for the schema, and [docs/insights.md](docs/insights.md) for the insights engine. Additional docs (`security`, `reports`, `testing`, `deployment`) are added as each phase lands.
 
 ## Tech stack
 
@@ -66,9 +67,16 @@ Never commit `.env`. Only the anon key belongs in the client — the service-rol
 npm run dev       # start the dev server
 npm run build     # type-check and build for production
 npm run lint      # run oxlint
+npm run test      # run unit tests (vitest)
 npm run preview   # preview the production build locally
 ```
 
 ## Status
 
-Built in phases (foundation → Supabase → auth → transactions → dashboard → reports → insights → categories → settings → quality → deployment). Currently: **Phase 1 — Foundation** (design system, routing, base layout, dashboard UI on mock data). Supabase is not yet connected; pages that need real data currently show their empty state or mock content.
+Built in phases (foundation → Supabase → auth → transactions → dashboard → reports → insights → categories → settings → quality → deployment).
+
+- ✅ **Phase 1 — Foundation**: design system, routing, base layout.
+- ✅ **Phase 2 — Supabase**: schema (`profiles`, `categories`, `transactions`, `allocations`) live on the real project, RLS on every table, new-user provisioning trigger.
+- ✅ **Phase 3 — Authentication**: register/login/logout/forgot-reset/change-password, protected routes.
+- ✅ **Savings & Investment Allocation** (pulled forward ahead of Phase 4 so later phases can be built with it from the start): schema, calculation/insight engine (with tests), Settings target field, Dashboard preview card. See `docs/insights.md`.
+- ⏳ **Phase 4 onward** (transactions CRUD, real dashboard/report queries, insights page, categories UI, deployment): not started. The Dashboard currently renders on mock data (`src/lib/mock/`), swapped for live Supabase queries as each phase lands.

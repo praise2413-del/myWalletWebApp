@@ -5,6 +5,8 @@ export interface Profile {
   fullName: string;
   email: string;
   currency: string;
+  /** Personal Savings & Investment Allocation target, as a percentage of recorded income. Defaults to 30. */
+  allocationTarget: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +30,19 @@ export interface Transaction {
   type: TransactionType;
   amount: number;
   transactionDate: string;
+  note: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AllocationType = "SAVING" | "INVESTMENT";
+
+export interface Allocation {
+  id: string;
+  userId: string;
+  type: AllocationType;
+  amount: number;
+  allocationDate: string;
   note: string | null;
   createdAt: string;
   updatedAt: string;

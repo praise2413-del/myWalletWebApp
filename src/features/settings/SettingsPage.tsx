@@ -124,6 +124,8 @@ function PreferencesTab() {
   const setMode = useThemeStore((state) => state.setMode);
   const currency = profile?.currency ?? "TZS";
   const [saving, setSaving] = useState(false);
+  const [targetInput, setTargetInput] = useState(String(profile?.allocationTarget ?? 30));
+  const [targetError, setTargetError] = useState<string | null>(null);
 
   const themeOptions: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
     { mode: "light", label: "Light", icon: Sun },
@@ -139,6 +141,26 @@ function PreferencesTab() {
     if (!error) {
       await refreshProfile();
       showToast("Currency updated");
+    }
+  };
+
+  const handleTargetSave = async () => {
+    if (!profile) return;
+    const value = Number(targetInput);
+    if (!Number.isFinite(value) || value < 0 || value > 100) {
+      setTargetError("Enter a percentage between 0 and 100");
+      setTargetInput(String(profile.allocationTarget));
+      return;
+    }
+    setTargetError(null);
+    if (value === profile.allocationTarget) return;
+
+    setSaving(true);
+    const { error } = await supabase.from("profiles").update({ allocation_target: value }).eq("id", profile.id);
+    setSaving(false);
+    if (!error) {
+      await refreshProfile();
+      showToast("Savings & investment target updated");
     }
   };
 
@@ -180,6 +202,37 @@ function PreferencesTab() {
           <option value="KES">KES — Kenyan Shilling</option>
         </select>
       </label>
+
+      <div className="max-w-xs">
+        <h2 className="mb-1 text-sm font-semibold text-text-primary">Savings & Investment Target</h2>
+        <p className="mb-3 text-xs text-text-tertiary">
+          The percentage of your income you're aiming to set aside as savings or investments each period.
+          Insights and reports compare your actual allocation against this target.
+        </p>
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-text-secondary">Target percentage</span>
+          <div className="relative">
+            <input
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              value={targetInput}
+              disabled={saving}
+              onChange={(e) => setTargetInput(e.target.value)}
+              onBlur={handleTargetSave}
+              className={cn(
+                "h-10 w-full rounded-lg border bg-background pl-3 pr-8 text-sm text-text-primary focus:outline-none",
+                targetError ? "border-expense-500" : "border-border-strong focus:border-primary-500",
+              )}
+            />
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-text-tertiary">
+              %
+            </span>
+          </div>
+          {targetError && <p className="mt-1.5 text-xs text-expense-600">{targetError}</p>}
+        </label>
+      </div>
     </div>
   );
 }
