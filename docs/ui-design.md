@@ -4,6 +4,7 @@ Visual references (produced before implementation, used as the build target):
 
 - [Light mode](design/light-mode-reference.png)
 - [Dark mode](design/dark-mode-reference.png)
+- [Auth branding panel](design/auth-panel-reference.png) — the left-side illustrated panel on login/signup
 
 ## Principles
 
@@ -35,6 +36,12 @@ Inter, loaded via Google Fonts in `index.html`, set as `--font-sans`. Page title
 ## Motion
 
 Recharts entrance animations (pie/area draw-in) are disabled when `prefers-reduced-motion: reduce` is set — see `usePrefersReducedMotion`. Apply the same hook to any future chart or transition animation.
+
+## Auth branding panel
+
+`AuthBrandPanel` (`src/features/auth/components/AuthBrandPanel.tsx`), used by all auth pages via `AuthLayout`. Rebuilt to match `docs/design/auth-panel-reference.png` precisely: logo, a "Smart • Simple • Secure" pill, a per-page `headline`, a fixed marketing tagline (not per-page — shown identically on login/register/forgot/reset), a 3-item feature list (icon + title + description), and a testimonial quote card. Colors and spacing were sampled directly from the reference (radial glow position, icon-box tint, text opacity tiers), not eyeballed.
+
+The centerpiece illustration is intentionally the **actual reference image** (`public/illustrations/auth-brand-illustration.png`), not a hand-built SVG — it's a detailed 3D-rendered graphic (wallet, coin, trend line, leaves, shield) that a flat SVG recreation couldn't match faithfully, and the spec called for matching the reference exactly. It's absolutely positioned on the right side of the panel with a `mask-image` linear-gradient fading its left edge to transparent, so it blends into the panel's own CSS gradient background with no visible seam. This panel is intentionally theme-independent (same dark green in light and dark app mode) — the reference itself uses one fixed dark-green treatment regardless of the app's theme.
 
 ## Layout shell
 

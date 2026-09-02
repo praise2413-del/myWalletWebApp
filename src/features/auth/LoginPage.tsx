@@ -36,7 +36,6 @@ export default function LoginPage() {
   return (
     <AuthLayout
       headline="Welcome back!"
-      subtext="Sign in to continue to your account"
       title="Welcome back"
       description="Sign in to continue to your account"
       footer={

@@ -35,7 +35,6 @@ export default function ForgotPasswordPage() {
 
   const layoutProps = {
     headline: "Forgot your password?",
-    subtext: "No worries — we'll help you get back into your account.",
   };
 
   if (submittedEmail) {

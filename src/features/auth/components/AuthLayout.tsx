@@ -4,17 +4,16 @@ import { AuthBrandPanel } from "@/features/auth/components/AuthBrandPanel";
 
 interface AuthLayoutProps {
   headline: string;
-  subtext: string;
   title: string;
   description: string;
   children: ReactNode;
   footer?: ReactNode;
 }
 
-export function AuthLayout({ headline, subtext, title, description, children, footer }: AuthLayoutProps) {
+export function AuthLayout({ headline, title, description, children, footer }: AuthLayoutProps) {
   return (
     <div className="flex min-h-dvh bg-background">
-      <AuthBrandPanel headline={headline} subtext={subtext} />
+      <AuthBrandPanel headline={headline} />
 
       <div className="flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:px-16">
         <div className="mx-auto w-full max-w-sm">

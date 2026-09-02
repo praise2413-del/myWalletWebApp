@@ -34,7 +34,6 @@ export default function ResetPasswordPage() {
 
   const layoutProps = {
     headline: "Almost there",
-    subtext: "Choose a new password to finish resetting your account.",
   };
 
   if (done) {

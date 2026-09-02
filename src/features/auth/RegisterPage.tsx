@@ -46,7 +46,6 @@ export default function RegisterPage() {
 
   const layoutProps = {
     headline: "Take control of your financial future",
-    subtext: "Track, analyze, and understand your money like never before.",
   };
 
   if (submittedEmail) {
