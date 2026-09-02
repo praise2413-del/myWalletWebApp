@@ -79,4 +79,5 @@ Built in phases (foundation → Supabase → auth → transactions → dashboard
 - ✅ **Phase 2 — Supabase**: schema (`profiles`, `categories`, `transactions`, `allocations`) live on the real project, RLS on every table, new-user provisioning trigger.
 - ✅ **Phase 3 — Authentication**: register/login/logout/forgot-reset/change-password, protected routes.
 - ✅ **Savings & Investment Allocation** (pulled forward ahead of Phase 4 so later phases can be built with it from the start): schema, calculation/insight engine (with tests), Settings target field, Dashboard preview card. See `docs/insights.md`.
-- ⏳ **Phase 4 onward** (transactions CRUD, real dashboard/report queries, insights page, categories UI, deployment): not started. The Dashboard currently renders on mock data (`src/lib/mock/`), swapped for live Supabase queries as each phase lands.
+- ✅ **Phase 4 — Transactions**: full CRUD for income/expense transactions and savings/investment allocations (add/edit/delete, search, type/date filters, sort, pagination), real category data, RLS- and trigger-verified against the live database.
+- ⏳ **Phase 5 onward** (real dashboard/report queries, insights page, categories CRUD UI, deployment): not started. The Dashboard still renders on mock data (`src/lib/mock/`) pending Phase 5.
