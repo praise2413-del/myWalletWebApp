@@ -18,7 +18,7 @@ myWallet isn't just a place to log transactions — it computes reports and gene
 - Category management with sensible defaults and custom categories
 - Light/dark/system theme, fully responsive (desktop/tablet/mobile)
 
-See [docs/ui-design.md](docs/ui-design.md) for the design system, [docs/architecture.md](docs/architecture.md) for project structure, [docs/database.md](docs/database.md) for the schema, and [docs/insights.md](docs/insights.md) for the insights engine. Additional docs (`security`, `reports`, `testing`, `deployment`) are added as each phase lands.
+See [docs/ui-design.md](docs/ui-design.md) for the design system, [docs/architecture.md](docs/architecture.md) for project structure, [docs/database.md](docs/database.md) for the schema, [docs/insights.md](docs/insights.md) for the insights engine, and [docs/reports.md](docs/reports.md) for reporting/period logic. Additional docs (`security`, `testing`, `deployment`) are added as each phase lands.
 
 ## Tech stack
 
@@ -81,4 +81,5 @@ Built in phases (foundation → Supabase → auth → transactions → dashboard
 - ✅ **Savings & Investment Allocation** (pulled forward ahead of Phase 4 so later phases can be built with it from the start): schema, calculation/insight engine (with tests), Settings target field, Dashboard preview card. See `docs/insights.md`.
 - ✅ **Phase 4 — Transactions**: full CRUD for income/expense transactions and savings/investment allocations (add/edit/delete, search, type/date filters, sort, pagination), real category data, RLS- and trigger-verified against the live database.
 - ✅ **Phase 5 — Dashboard**: balance, income, expenses, net cash flow, spending overview, recent transactions, spending trend, and the savings/investment allocation card are all live Supabase queries (This Week/Month/Year, with period-over-period deltas and empty states) — no more mock data.
-- ⏳ **Phase 6 onward** (Reports, Insights page, Categories CRUD UI, deployment): not started.
+- ✅ **Phase 6 — Reports & Analytics**: Daily/Weekly/Monthly/Yearly/Custom Range reporting — summary, plain-language highlights, expense distribution, spending trend, category comparison, income vs. expense, period-over-period category changes, savings/investment allocation, and a detailed per-category breakdown, all live Supabase queries. See `docs/reports.md`.
+- ⏳ **Phase 7 onward** (Insights page, Categories CRUD UI, deployment): not started.

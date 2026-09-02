@@ -7,7 +7,7 @@ import { FinancialInsightCard } from "@/features/dashboard/components/FinancialI
 import { RecentTransactionsCard } from "@/features/dashboard/components/RecentTransactionsCard";
 import { SpendingOverviewCard } from "@/features/dashboard/components/SpendingOverviewCard";
 import { SpendingTrendCard } from "@/features/dashboard/components/SpendingTrendCard";
-import { StatCard } from "@/features/dashboard/components/StatCard";
+import { StatCard } from "@/components/ui/StatCard";
 import { TopCategoriesCard } from "@/features/dashboard/components/TopCategoriesCard";
 import { useDashboardData } from "@/features/dashboard/hooks/useDashboardData";
 import { useAuth } from "@/hooks/useAuth";
