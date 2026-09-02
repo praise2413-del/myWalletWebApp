@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f6f7f8;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --border: #e7e9ec;
+  --border-strong: #d8dbe0;
+
+  --text-primary: #10161a;
+  --text-secondary: #5b6470;
+  --text-tertiary: #94a0ac;
+  --text-on-primary: #ffffff;
+
+  --primary-50: #eafbf5;
+  --primary-100: #cdf3e5;
+  --primary-200: #9de6cf;
+  --primary-300: #67d3b5;
+  --primary-400: #34b998;
+  --primary-500: #0f9e7c;
+  --primary-600: #057a61;
+  --primary-700: #06614f;
+  --primary-800: #094e40;
+  --primary-900: #0a4136;
+  --primary-950: #04241d;
+
+  --income-50: #eafbf5;
+  --income-500: #0f9e7c;
+  --income-600: #057a61;
+
+  --expense-50: #fdf2f1;
+  --expense-100: #fbe1de;
+  --expense-200: #f6c0ba;
+  --expense-300: #ef968c;
+  --expense-400: #e66f60;
+  --expense-500: #dc5241;
+  --expense-600: #c23f2f;
+  --expense-700: #9f3226;
+
+  --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
+  --warning-700: #b45309;
+
+  --chart-1: var(--primary-500);
+  --chart-2: #7875eb;
+  --chart-3: #fd8064;
+  --chart-4: #3b82c4;
+  --chart-5: #c2a83e;
+  --chart-6: #94a0ac;
+
+  --shadow-card: 0 1px 2px rgba(16, 22, 26, 0.04), 0 1px 12px rgba(16, 22, 26, 0.04);
+  --shadow-popover: 0 12px 32px rgba(16, 22, 26, 0.14), 0 2px 8px rgba(16, 22, 26, 0.06);
+}
+
+.dark {
+  --background: #030d18;
+  --surface: #09141f;
+  --surface-elevated: #0f1c2a;
+  --border: #17273a;
+  --border-strong: #223a52;
+
+  --text-primary: #f3f6f9;
+  --text-secondary: #8b96a5;
+  --text-tertiary: #5b6674;
+  --text-on-primary: #ffffff;
+
+  --primary-50: #08251d;
+  --primary-100: #0d3329;
+  --primary-200: #14503f;
+  --primary-300: #1a6e54;
+  --primary-400: #219268;
+  --primary-500: #1fac74;
+  --primary-600: #17945f;
+  --primary-700: #147a4f;
+  --primary-800: #0f5f3e;
+  --primary-900: #0b4a31;
+  --primary-950: #062d1e;
+
+  --income-50: #08251d;
+  --income-500: #1fac74;
+  --income-600: #17945f;
+
+  --expense-50: #241019;
+  --expense-100: #391625;
+  --expense-200: #562135;
+  --expense-300: #7c2f47;
+  --expense-400: #b04456;
+  --expense-500: #ec7561;
+  --expense-600: #f0654a;
+  --expense-700: #f5896f;
+
+  --warning-50: #241c08;
+  --warning-100: #3a2d0c;
+  --warning-500: #f2b93d;
+  --warning-600: #f5c860;
+  --warning-700: #f8d484;
+
+  --chart-1: var(--primary-500);
+  --chart-2: #8b7cf6;
+  --chart-3: #ff8a65;
+  --chart-4: #5b9bd9;
+  --chart-5: #d4b94a;
+  --chart-6: #7c8894;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 12px rgba(0, 0, 0, 0.24);
+  --shadow-popover: 0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-on-primary: var(--text-on-primary);
+
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+  --color-primary-950: var(--primary-950);
+
+  --color-income-50: var(--income-50);
+  --color-income-500: var(--income-500);
+  --color-income-600: var(--income-600);
+
+  --color-expense-50: var(--expense-50);
+  --color-expense-100: var(--expense-100);
+  --color-expense-200: var(--expense-200);
+  --color-expense-300: var(--expense-300);
+  --color-expense-400: var(--expense-400);
+  --color-expense-500: var(--expense-500);
+  --color-expense-600: var(--expense-600);
+  --color-expense-700: var(--expense-700);
+
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
