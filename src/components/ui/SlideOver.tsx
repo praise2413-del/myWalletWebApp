@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { cn } from "@/lib/utils/cn";
 
 interface SlideOverProps {
@@ -11,6 +12,9 @@ interface SlideOverProps {
 }
 
 export function SlideOver({ open, onClose, title, description, children }: SlideOverProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, containerRef);
+
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -26,17 +30,24 @@ export function SlideOver({ open, onClose, title, description, children }: Slide
         type="button"
         aria-label="Close"
         onClick={onClose}
+        tabIndex={open ? 0 : -1}
         className={cn(
           "absolute inset-0 bg-black/40 transition-opacity duration-200",
           open ? "opacity-100" : "opacity-0",
         )}
       />
       <div
+        ref={containerRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="slide-over-title"
+        // `inert` keeps this panel's contents out of the tab order while closed — it stays
+        // mounted (for the slide-out transition), so aria-hidden alone isn't enough to stop
+        // a sighted keyboard user tabbing into hidden fields.
+        inert={!open ? true : undefined}
+        tabIndex={-1}
         className={cn(
-          "absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-surface-elevated shadow-[var(--shadow-popover)] transition-transform duration-200",
+          "absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-surface-elevated shadow-[var(--shadow-popover)] transition-transform duration-200 focus:outline-none",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >

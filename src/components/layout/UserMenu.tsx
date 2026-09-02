@@ -1,5 +1,5 @@
 import { LogOut, Settings, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,6 +10,15 @@ export function UserMenu() {
 
   const displayName = profile?.fullName?.trim() || user?.email?.split("@")[0] || "Account";
   const initial = displayName[0]?.toUpperCase() ?? "?";
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
 
   return (
     <div className="relative">

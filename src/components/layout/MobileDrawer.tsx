@@ -1,7 +1,9 @@
 import { X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Logo } from "@/components/layout/Logo";
 import { NAV_ITEMS } from "@/components/layout/navItems";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { cn } from "@/lib/utils/cn";
 
 interface MobileDrawerProps {
@@ -10,6 +12,18 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, containerRef);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
   return (
     <div
       className={cn(
@@ -22,17 +36,21 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
         type="button"
         aria-label="Close navigation menu"
         onClick={onClose}
+        tabIndex={open ? 0 : -1}
         className={cn(
           "absolute inset-0 bg-black/40 transition-opacity duration-200",
           open ? "opacity-100" : "opacity-0",
         )}
       />
       <div
+        ref={containerRef}
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
+        inert={!open ? true : undefined}
+        tabIndex={-1}
         className={cn(
-          "absolute inset-y-0 left-0 flex w-72 max-w-[80vw] flex-col bg-surface transition-transform duration-200",
+          "absolute inset-y-0 left-0 flex w-72 max-w-[80vw] flex-col bg-surface transition-transform duration-200 focus:outline-none",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >

@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { cn } from "@/lib/utils/cn";
 
 interface ModalProps {
@@ -12,6 +13,9 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, description, children, size = "sm" }: ModalProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, containerRef);
+
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -32,11 +36,13 @@ export function Modal({ open, onClose, title, description, children, size = "sm"
         className="absolute inset-0 bg-black/40"
       />
       <div
+        ref={containerRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
+        tabIndex={-1}
         className={cn(
-          "relative w-full rounded-2xl border border-border bg-surface-elevated p-6 shadow-[var(--shadow-popover)]",
+          "relative w-full rounded-2xl border border-border bg-surface-elevated p-6 shadow-[var(--shadow-popover)] focus:outline-none",
           size === "sm" ? "max-w-sm" : "max-w-lg",
         )}
       >
