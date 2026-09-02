@@ -8,6 +8,7 @@ interface RecentTransaction {
   id: string;
   group: string;
   category: string;
+  categoryIcon: string;
   type: TransactionType;
   amount: number;
 }
@@ -41,7 +42,7 @@ export function RecentTransactionsCard({ transactions, currency }: RecentTransac
               {transactions
                 .filter((t) => t.group === group)
                 .map((t) => {
-                  const Icon = getCategoryIcon(t.category);
+                  const Icon = getCategoryIcon(t.categoryIcon);
                   const color = getCategoryColor(t.category);
                   return (
                     <li key={t.id} className="flex items-center gap-3">

@@ -1,6 +1,7 @@
 export interface NamedAmount {
   name: string;
   amount: number;
+  icon?: string;
 }
 
 /**

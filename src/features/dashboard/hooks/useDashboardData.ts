@@ -18,6 +18,7 @@ export interface RecentTransaction {
   id: string;
   group: string;
   category: string;
+  categoryIcon: string;
   type: TransactionType;
   amount: number;
 }
@@ -85,7 +86,7 @@ export function useDashboardData(period: DashboardPeriod) {
           .lte("transaction_date", toDateKey(range.end)),
         supabase
           .from("transactions")
-          .select("id, category:categories(name), type, amount, transaction_date")
+          .select("id, category:categories(name, icon), type, amount, transaction_date")
           .order("transaction_date", { ascending: false })
           .order("created_at", { ascending: false })
           .limit(5),
@@ -164,6 +165,7 @@ export function useDashboardData(period: DashboardPeriod) {
         id: t.id,
         group: relativeDayLabel(t.transaction_date),
         category: t.category?.name ?? "Other",
+        categoryIcon: t.category?.icon ?? "wallet",
         type: t.type,
         amount: t.amount,
       }));

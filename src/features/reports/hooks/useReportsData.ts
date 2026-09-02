@@ -71,7 +71,7 @@ const EMPTY_DATA: ReportData = {
 
 interface TransactionRow {
   category_id: string;
-  category: { name: string } | null;
+  category: { name: string; icon: string } | null;
   type: TransactionType;
   amount: number;
   transaction_date: string;
@@ -100,7 +100,7 @@ export function useReportsData(period: ReportPeriod, customRange?: CustomDateRan
       const [windowRes, allocationRes] = await Promise.all([
         supabase
           .from("transactions")
-          .select("category_id, category:categories(name), type, amount, transaction_date")
+          .select("category_id, category:categories(name, icon), type, amount, transaction_date")
           .gte("transaction_date", toDateKey(range.previousStart))
           .lte("transaction_date", toDateKey(range.end)),
         supabase
@@ -143,8 +143,16 @@ export function useReportsData(period: ReportPeriod, customRange?: CustomDateRan
       const currentCategoryMap = categoryTotal(currentTx);
       const previousCategoryMap = categoryTotal(previousTx);
 
+      const categoryIconByName = new Map<string, string>();
+      for (const t of currentTx) {
+        if (t.type !== "EXPENSE" || !t.category) continue;
+        categoryIconByName.set(t.category.name, t.category.icon);
+      }
+
       const categoryEntries = Array.from(currentCategoryMap, ([name, amount]) => ({ name, amount }));
-      const categoryBreakdown = [...categoryEntries].sort((a, b) => b.amount - a.amount);
+      const categoryBreakdown = [...categoryEntries]
+        .sort((a, b) => b.amount - a.amount)
+        .map((entry) => ({ ...entry, icon: categoryIconByName.get(entry.name) ?? "wallet" }));
       const categoryDistribution = groupTopCategories(categoryEntries, 5);
       const categoryComparison = groupTopCategories(categoryEntries, 8);
 

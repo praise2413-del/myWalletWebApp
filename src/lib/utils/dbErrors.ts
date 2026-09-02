@@ -13,6 +13,12 @@ export function friendlyDbError(message: string, fallback: string): string {
   if (lower.includes("violates row-level security")) {
     return "You don't have permission to do that.";
   }
+  if (lower.includes("duplicate key") || lower.includes("already exists")) {
+    return "You already have a category with that name.";
+  }
+  if (lower.includes("violates foreign key constraint") || lower.includes("is still referenced")) {
+    return "This category still has transactions attached. Move or delete those first.";
+  }
 
   return fallback;
 }

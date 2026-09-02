@@ -35,7 +35,7 @@ export function CategoryBreakdownTable({ data, currency }: CategoryBreakdownTabl
             </thead>
             <tbody>
               {data.map((item) => {
-                const Icon = getCategoryIcon(item.name);
+                const Icon = getCategoryIcon(item.icon ?? "wallet");
                 const color = getCategoryColor(item.name);
                 return (
                   <tr key={item.name} className="border-b border-border last:border-0">

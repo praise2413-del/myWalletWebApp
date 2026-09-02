@@ -68,7 +68,7 @@ export function TransactionsTable({
           </thead>
           <tbody>
             {transactions.map((t) => {
-              const Icon = getCategoryIcon(t.category.name);
+              const Icon = getCategoryIcon(t.category.icon);
               const color = getCategoryColor(t.category.name);
               return (
                 <tr key={t.id} className="border-b border-border last:border-0 hover:bg-background/60">
@@ -129,7 +129,7 @@ export function TransactionsTable({
       {/* Mobile cards */}
       <ul className="divide-y divide-border sm:hidden">
         {transactions.map((t) => {
-          const Icon = getCategoryIcon(t.category.name);
+          const Icon = getCategoryIcon(t.category.icon);
           const color = getCategoryColor(t.category.name);
           return (
             <li key={t.id} className="flex items-center gap-3 px-4 py-3.5">

@@ -1,47 +1,75 @@
 import {
   Baby,
   Banknote,
+  Bike,
+  Book,
   Briefcase,
   Bus,
+  Car,
   Clapperboard,
+  Coffee,
+  Dumbbell,
   Gift,
   GraduationCap,
   Heart,
   Home,
+  Laptop,
+  type LucideIcon,
+  Music,
   Phone,
   PiggyBank,
+  Plane,
   Receipt,
   ShoppingBag,
+  ShoppingCart,
   Sparkles,
+  Stethoscope,
   TrendingUp,
   UtensilsCrossed,
   Wallet,
   Zap,
-  type LucideIcon,
 } from "lucide-react";
 
-const ICONS_BY_NAME: Record<string, LucideIcon> = {
-  Food: UtensilsCrossed,
-  Transport: Bus,
-  Rent: Home,
-  Utilities: Zap,
-  Education: GraduationCap,
-  Health: Heart,
-  Shopping: ShoppingBag,
-  Entertainment: Clapperboard,
-  Communication: Phone,
-  Family: Baby,
-  "Personal Care": Sparkles,
-  Bills: Receipt,
-  Salary: Wallet,
-  Business: Briefcase,
-  Freelance: Briefcase,
-  Allowance: Banknote,
-  Gift: Gift,
-  Investment: TrendingUp,
-  Savings: PiggyBank,
-  Other: Wallet,
+/**
+ * Keyed by the icon slug stored in categories.icon (kebab-case), not by
+ * category name — a custom category's chosen icon must render correctly
+ * regardless of what the user named it.
+ */
+const ICONS_BY_SLUG: Record<string, LucideIcon> = {
+  "utensils-crossed": UtensilsCrossed,
+  bus: Bus,
+  home: Home,
+  zap: Zap,
+  "graduation-cap": GraduationCap,
+  heart: Heart,
+  "shopping-bag": ShoppingBag,
+  clapperboard: Clapperboard,
+  phone: Phone,
+  baby: Baby,
+  sparkles: Sparkles,
+  receipt: Receipt,
+  wallet: Wallet,
+  briefcase: Briefcase,
+  banknote: Banknote,
+  gift: Gift,
+  "trending-up": TrendingUp,
+  "piggy-bank": PiggyBank,
+  car: Car,
+  bike: Bike,
+  plane: Plane,
+  coffee: Coffee,
+  "shopping-cart": ShoppingCart,
+  book: Book,
+  music: Music,
+  dumbbell: Dumbbell,
+  stethoscope: Stethoscope,
+  laptop: Laptop,
 };
+
+/** The curated set offered in the category icon picker. */
+export const ICON_PICKER_OPTIONS: { slug: string; icon: LucideIcon }[] = Object.entries(ICONS_BY_SLUG).map(
+  ([slug, icon]) => ({ slug, icon }),
+);
 
 export const CHART_COLORS = [
   "var(--color-chart-1)",
@@ -52,8 +80,8 @@ export const CHART_COLORS = [
   "var(--color-chart-6)",
 ];
 
-export function getCategoryIcon(name: string): LucideIcon {
-  return ICONS_BY_NAME[name] ?? Wallet;
+export function getCategoryIcon(slug: string): LucideIcon {
+  return ICONS_BY_SLUG[slug] ?? Wallet;
 }
 
 export function getCategoryColor(name: string): string {
