@@ -58,24 +58,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let active = true;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (!active) return;
-      setSession(data.session);
-      if (data.session?.user) {
-        loadProfile(data.session.user).finally(() => setLoading(false));
-      } else {
-        setLoading(false);
-      }
-    });
-
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    // Gates rendering on the profile fetch completing, not just the session — otherwise a
+    // freshly-signed-in page (e.g. right after signup) can render one frame with `profile`
+    // still null and fall back to less-specific data (like the greeting using the email
+    // prefix instead of the real name) before the fetch resolves a moment later.
+    async function syncSession(nextSession: Session | null) {
       setSession(nextSession);
       if (nextSession?.user) {
-        loadProfile(nextSession.user);
+        await loadProfile(nextSession.user);
       } else {
         setProfile(null);
         setProfileError(null);
       }
+      if (active) setLoading(false);
+    }
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      syncSession(data.session);
+    });
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (event === "INITIAL_SESSION") return; // already handled by getSession() above
+      if (event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
+        // Background updates to an already-active session — update quietly, no full-screen gate.
+        setSession(nextSession);
+        return;
+      }
+      // A real transition (SIGNED_IN, SIGNED_OUT, ...): gate on the profile fetch, same as above.
+      setLoading(true);
+      syncSession(nextSession);
     });
 
     return () => {

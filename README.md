@@ -61,6 +61,15 @@ npm run dev
 
 Never commit `.env`. Only the anon key belongs in the client — the service-role key must never be used in frontend code.
 
+## Auth email confirmation (current dev-stage trade-off)
+
+Supabase's built-in email service is rate-limited and not reliable for real delivery — confirmation/reset emails
+can silently fail to arrive. For now, **email confirmation is disabled** (`mailer_autoconfirm: true` in the
+Supabase project's Auth settings) so signup works immediately without depending on that email pipeline. Password
+reset still sends an email, so it's still subject to the same unreliability — worth keeping in mind while testing
+that flow. **Before any real users sign up**, configure a real SMTP provider in Supabase Auth settings and turn
+email confirmation back on.
+
 ## Development commands
 
 ```bash

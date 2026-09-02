@@ -15,6 +15,8 @@ const LoginPage = lazy(() => import("@/features/auth/LoginPage"));
 const RegisterPage = lazy(() => import("@/features/auth/RegisterPage"));
 const ForgotPasswordPage = lazy(() => import("@/features/auth/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/features/auth/ResetPasswordPage"));
+const TermsPage = lazy(() => import("@/features/legal/TermsPage"));
+const PrivacyPage = lazy(() => import("@/features/legal/PrivacyPage"));
 
 function RouteFallback() {
   return (
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/reset-password", element: withSuspense(<ResetPasswordPage />) },
+  { path: "/terms", element: withSuspense(<TermsPage />) },
+  { path: "/privacy", element: withSuspense(<PrivacyPage />) },
   {
     element: <RequireAuth />,
     children: [

@@ -129,13 +129,23 @@ export default function RegisterPage() {
             />
             <span>
               I agree to the{" "}
-              <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >
                 Terms of Service
-              </a>{" "}
+              </Link>{" "}
               and{" "}
-              <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+              <Link
+                to="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >
                 Privacy Policy
-              </a>
+              </Link>
             </span>
           </label>
           {errors.agreeToTerms && (
