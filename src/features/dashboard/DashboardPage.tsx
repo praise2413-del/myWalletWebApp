@@ -13,7 +13,7 @@ import {
   MOCK_SPENDING_TREND,
   MOCK_SUMMARY,
 } from "@/lib/mock/dashboardMock";
-import { MOCK_CURRENT_USER } from "@/lib/mock/currentUser";
+import { useAuth } from "@/hooks/useAuth";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -24,14 +24,16 @@ function getGreeting() {
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState("This Month");
-  const currency = MOCK_CURRENT_USER.currency;
+  const { profile, user } = useAuth();
+  const currency = profile?.currency ?? "TZS";
+  const firstName = profile?.fullName?.trim().split(" ")[0] || user?.email?.split("@")[0] || "there";
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-text-primary">
-            {getGreeting()}, {MOCK_CURRENT_USER.firstName} 👋
+            {getGreeting()}, {firstName} 👋
           </h1>
           <p className="mt-1 text-sm text-text-secondary">
             Here&apos;s what&apos;s happening with your finances today.

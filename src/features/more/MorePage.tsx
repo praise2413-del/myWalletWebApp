@@ -2,6 +2,7 @@ import { ChevronRight, HelpCircle, LogOut, Settings, Tags } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card } from "@/components/ui/Card";
+import { useAuth } from "@/hooks/useAuth";
 
 const LINKS = [
   { label: "Categories", to: "/categories", icon: Tags },
@@ -10,6 +11,8 @@ const LINKS = [
 ];
 
 export default function MorePage() {
+  const { signOut } = useAuth();
+
   return (
     <div className="lg:hidden">
       <PageHeader title="More" />
@@ -27,6 +30,7 @@ export default function MorePage() {
         ))}
         <button
           type="button"
+          onClick={() => signOut()}
           className="flex w-full items-center gap-3 px-4 py-3.5 text-sm font-medium text-expense-600 transition-colors hover:bg-background"
         >
           <LogOut className="size-4.5" aria-hidden="true" />

@@ -3,6 +3,7 @@ export type TransactionType = "INCOME" | "EXPENSE";
 export interface Profile {
   id: string;
   fullName: string;
+  email: string;
   currency: string;
   createdAt: string;
   updatedAt: string;

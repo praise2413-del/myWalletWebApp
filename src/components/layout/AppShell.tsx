@@ -4,6 +4,7 @@ import { MobileDrawer } from "@/components/layout/MobileDrawer";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { Toaster } from "@/components/ui/Toaster";
 
 export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,6 +23,7 @@ export function AppShell() {
         </main>
         <MobileNav />
       </div>
+      <Toaster />
     </div>
   );
 }

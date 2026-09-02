@@ -1,6 +1,6 @@
-import { Bell, ChevronDown, Menu, Search } from "lucide-react";
+import { Bell, Menu, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { MOCK_CURRENT_USER } from "@/lib/mock/currentUser";
+import { UserMenu } from "@/components/layout/UserMenu";
 
 interface TopbarProps {
   onOpenMobileNav: () => void;
@@ -41,18 +41,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
         </button>
         <ThemeToggle />
         <div className="mx-1 h-6 w-px bg-border" aria-hidden="true" />
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition-colors hover:bg-background"
-        >
-          <span className="flex size-8 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-700 dark:text-primary-500">
-            {MOCK_CURRENT_USER.firstName[0]}
-          </span>
-          <span className="hidden text-sm font-medium text-text-primary sm:block">
-            {MOCK_CURRENT_USER.firstName}
-          </span>
-          <ChevronDown className="hidden size-4 text-text-tertiary sm:block" aria-hidden="true" />
-        </button>
+        <UserMenu />
       </div>
     </header>
   );

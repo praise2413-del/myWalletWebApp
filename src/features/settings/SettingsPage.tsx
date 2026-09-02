@@ -1,11 +1,21 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Database, Monitor, Moon, Shield, Sun, User } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PasswordField } from "@/components/ui/PasswordField";
+import { TextField } from "@/components/ui/TextField";
+import { useAuth } from "@/hooks/useAuth";
 import { type ThemeMode, useThemeStore } from "@/hooks/useThemeStore";
-import { MOCK_CURRENT_USER } from "@/lib/mock/currentUser";
+import { useToastStore } from "@/hooks/useToastStore";
+import { supabase } from "@/lib/supabase/client";
+import { friendlyAuthError } from "@/lib/utils/authErrors";
 import { cn } from "@/lib/utils/cn";
+import { type ChangePasswordInput, changePasswordSchema } from "@/lib/validations/auth";
 
 const TABS = [
   { id: "profile", label: "Profile", icon: User },
@@ -54,44 +64,83 @@ export default function SettingsPage() {
   );
 }
 
-function Field({ label, value }: { label: string; value: string }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-sm font-medium text-text-secondary">{label}</span>
-      <input
-        defaultValue={value}
-        readOnly
-        className="h-10 w-full rounded-lg border border-border-strong bg-background px-3 text-sm text-text-primary focus:outline-none"
-      />
-    </label>
-  );
-}
+const profileSchema = z.object({
+  fullName: z.string().min(2, "Enter your full name"),
+});
+type ProfileFormInput = z.infer<typeof profileSchema>;
 
 function ProfileTab() {
+  const { profile, user, refreshProfile } = useAuth();
+  const showToast = useToastStore((state) => state.showToast);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm<ProfileFormInput>({
+    resolver: zodResolver(profileSchema),
+    values: { fullName: profile?.fullName ?? "" },
+  });
+
+  const onSubmit = async ({ fullName }: ProfileFormInput) => {
+    if (!profile) return;
+    setFormError(null);
+    const { error } = await supabase.from("profiles").update({ full_name: fullName }).eq("id", profile.id);
+    if (error) {
+      setFormError("We couldn't save your profile. Please try again.");
+      return;
+    }
+    await refreshProfile();
+    reset({ fullName });
+    showToast("Profile updated");
+  };
+
   return (
-    <div className="max-w-md space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="max-w-md space-y-4">
       <h2 className="text-sm font-semibold text-text-primary">Profile information</h2>
-      <Field label="Full name" value={MOCK_CURRENT_USER.fullName} />
-      <Field label="Email address" value={MOCK_CURRENT_USER.email} />
-      <p className="text-xs text-text-tertiary">
-        Profile editing will be enabled once authentication is connected.
-      </p>
-      <Button size="sm" disabled>
-        Save Changes
+      {formError && <AlertBanner message={formError} />}
+      <TextField label="Full name" error={errors.fullName?.message} {...register("fullName")} />
+      <label className="block">
+        <span className="mb-1.5 block text-sm font-medium text-text-secondary">Email address</span>
+        <input
+          value={user?.email ?? ""}
+          readOnly
+          className="h-10 w-full rounded-lg border border-border-strong bg-background px-3 text-sm text-text-tertiary focus:outline-none"
+        />
+      </label>
+      <Button type="submit" size="sm" disabled={!isDirty || isSubmitting}>
+        {isSubmitting ? "Saving..." : "Save Changes"}
       </Button>
-    </div>
+    </form>
   );
 }
 
 function PreferencesTab() {
+  const { profile, refreshProfile } = useAuth();
+  const showToast = useToastStore((state) => state.showToast);
   const mode = useThemeStore((state) => state.mode);
   const setMode = useThemeStore((state) => state.setMode);
+  const currency = profile?.currency ?? "TZS";
+  const [saving, setSaving] = useState(false);
 
   const themeOptions: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
     { mode: "light", label: "Light", icon: Sun },
     { mode: "dark", label: "Dark", icon: Moon },
     { mode: "system", label: "System", icon: Monitor },
   ];
+
+  const handleCurrencyChange = async (value: string) => {
+    if (!profile) return;
+    setSaving(true);
+    const { error } = await supabase.from("profiles").update({ currency: value }).eq("id", profile.id);
+    setSaving(false);
+    if (!error) {
+      await refreshProfile();
+      showToast("Currency updated");
+    }
+  };
 
   return (
     <div className="max-w-md space-y-6">
@@ -121,7 +170,9 @@ function PreferencesTab() {
       <label className="block max-w-xs">
         <span className="mb-1.5 block text-sm font-medium text-text-secondary">Currency</span>
         <select
-          defaultValue={MOCK_CURRENT_USER.currency}
+          value={currency}
+          disabled={saving}
+          onChange={(e) => handleCurrencyChange(e.target.value)}
           className="h-10 w-full rounded-lg border border-border-strong bg-background px-3 text-sm text-text-primary focus:border-primary-500 focus:outline-none"
         >
           <option value="TZS">TZS — Tanzanian Shilling</option>
@@ -134,18 +185,47 @@ function PreferencesTab() {
 }
 
 function SecurityTab() {
+  const showToast = useToastStore((state) => state.showToast);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ChangePasswordInput>({ resolver: zodResolver(changePasswordSchema) });
+
+  const onSubmit = async ({ newPassword }: ChangePasswordInput) => {
+    setFormError(null);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) {
+      setFormError(friendlyAuthError(error.message));
+      return;
+    }
+    reset();
+    showToast("Password updated");
+  };
+
   return (
-    <div className="max-w-md space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="max-w-md space-y-4">
       <h2 className="text-sm font-semibold text-text-primary">Change password</h2>
-      <Field label="Current password" value="" />
-      <Field label="New password" value="" />
-      <p className="text-xs text-text-tertiary">
-        Password management will be enabled once Supabase Auth is connected.
-      </p>
-      <Button size="sm" disabled>
-        Update Password
+      {formError && <AlertBanner message={formError} />}
+      <PasswordField
+        label="New password"
+        autoComplete="new-password"
+        error={errors.newPassword?.message}
+        {...register("newPassword")}
+      />
+      <PasswordField
+        label="Confirm new password"
+        autoComplete="new-password"
+        error={errors.confirmPassword?.message}
+        {...register("confirmPassword")}
+      />
+      <Button type="submit" size="sm" disabled={isSubmitting}>
+        {isSubmitting ? "Updating..." : "Update Password"}
       </Button>
-    </div>
+    </form>
   );
 }
 
