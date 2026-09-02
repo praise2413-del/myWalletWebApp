@@ -19,22 +19,26 @@ export function TopCategoriesCard({ data, currency }: TopCategoriesCardProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-3.5">
-          {sorted.map((item) => (
-            <li key={item.name}>
-              <div className="mb-1.5 flex items-center justify-between text-sm">
-                <span className="font-medium text-text-primary">{item.name}</span>
-                <span className="text-text-secondary">{formatCurrency(item.amount, currency)}</span>
-              </div>
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-background">
-                <div
-                  className="h-full rounded-full bg-primary-500"
-                  style={{ width: `${safeDivide(item.amount, max) * 100}%` }}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
+        {sorted.length === 0 ? (
+          <p className="py-4 text-center text-sm text-text-tertiary">No spending recorded for this period yet.</p>
+        ) : (
+          <ul className="space-y-3.5">
+            {sorted.map((item) => (
+              <li key={item.name}>
+                <div className="mb-1.5 flex items-center justify-between text-sm">
+                  <span className="font-medium text-text-primary">{item.name}</span>
+                  <span className="text-text-secondary">{formatCurrency(item.amount, currency)}</span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-background">
+                  <div
+                    className="h-full rounded-full bg-primary-500"
+                    style={{ width: `${safeDivide(item.amount, max) * 100}%` }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
     </Card>
   );

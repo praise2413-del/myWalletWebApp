@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { PeriodSelector } from "@/components/ui/PeriodSelector";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { AllocationCard } from "@/features/dashboard/components/AllocationCard";
 import { FinancialInsightCard } from "@/features/dashboard/components/FinancialInsightCard";
 import { RecentTransactionsCard } from "@/features/dashboard/components/RecentTransactionsCard";
@@ -7,15 +9,10 @@ import { SpendingOverviewCard } from "@/features/dashboard/components/SpendingOv
 import { SpendingTrendCard } from "@/features/dashboard/components/SpendingTrendCard";
 import { StatCard } from "@/features/dashboard/components/StatCard";
 import { TopCategoriesCard } from "@/features/dashboard/components/TopCategoriesCard";
-import {
-  MOCK_ALLOCATION,
-  MOCK_DASHBOARD_INSIGHT,
-  MOCK_RECENT_TRANSACTIONS,
-  MOCK_SPENDING_BY_CATEGORY,
-  MOCK_SPENDING_TREND,
-  MOCK_SUMMARY,
-} from "@/lib/mock/dashboardMock";
+import { useDashboardData } from "@/features/dashboard/hooks/useDashboardData";
 import { useAuth } from "@/hooks/useAuth";
+import { getTopCategoryInsight } from "@/lib/insights/spending";
+import type { DashboardPeriod } from "@/lib/utils/period";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -24,11 +21,16 @@ function getGreeting() {
   return "Good evening";
 }
 
+const PERIOD_OPTIONS: DashboardPeriod[] = ["This Week", "This Month", "This Year"];
+
 export default function DashboardPage() {
-  const [period, setPeriod] = useState("This Month");
+  const [period, setPeriod] = useState<DashboardPeriod>("This Month");
   const { profile, user } = useAuth();
   const currency = profile?.currency ?? "TZS";
   const firstName = profile?.fullName?.trim().split(" ")[0] || user?.email?.split("@")[0] || "there";
+
+  const { data, loading, error } = useDashboardData(period);
+  const insight = getTopCategoryInsight(data.spendingByCategory, data.summary.expenses, currency);
 
   return (
     <div className="space-y-6">
@@ -42,63 +44,89 @@ export default function DashboardPage() {
           </p>
         </div>
         <PeriodSelector
-          options={["This Week", "This Month", "This Year"]}
+          options={PERIOD_OPTIONS}
           value={period}
-          onChange={setPeriod}
+          onChange={(value) => setPeriod(value as DashboardPeriod)}
         />
       </div>
 
+      {error && <AlertBanner message={error} />}
+
+      {loading ? (
+        <DashboardSkeleton />
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              label="Current Balance"
+              amount={data.summary.balance}
+              currency={currency}
+              changePercent={data.summary.deltas.balance}
+            />
+            <StatCard
+              label="Total Income"
+              amount={data.summary.income}
+              currency={currency}
+              changePercent={data.summary.deltas.income}
+            />
+            <StatCard
+              label="Total Expenses"
+              amount={data.summary.expenses}
+              currency={currency}
+              changePercent={data.summary.deltas.expenses}
+              increaseIsGood={false}
+            />
+            <StatCard
+              label="Net Cash Flow"
+              amount={data.summary.netCashFlow}
+              currency={currency}
+              changePercent={data.summary.deltas.netCashFlow}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className="lg:col-span-1">
+              <SpendingOverviewCard data={data.spendingByCategory} currency={currency} />
+            </div>
+            <FinancialInsightCard title={insight?.title} body={insight?.body} />
+            <RecentTransactionsCard transactions={data.recentTransactions} currency={currency} />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <SpendingTrendCard data={data.spendingTrend} currency={currency} bucket={data.trendBucket} />
+            </div>
+            <div className="flex flex-col gap-4">
+              <TopCategoriesCard data={data.spendingByCategory} currency={currency} />
+              <AllocationCard
+                income={data.summary.income}
+                savings={data.allocation.savings}
+                investment={data.allocation.investment}
+                target={profile?.allocationTarget ?? 30}
+                currency={currency}
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Current Balance"
-          amount={MOCK_SUMMARY.balance}
-          currency={currency}
-          changePercent={MOCK_SUMMARY.deltas.balance}
-        />
-        <StatCard
-          label="Total Income"
-          amount={MOCK_SUMMARY.income}
-          currency={currency}
-          changePercent={MOCK_SUMMARY.deltas.income}
-        />
-        <StatCard
-          label="Total Expenses"
-          amount={MOCK_SUMMARY.expenses}
-          currency={currency}
-          changePercent={MOCK_SUMMARY.deltas.expenses}
-          increaseIsGood={false}
-        />
-        <StatCard
-          label="Net Cash Flow"
-          amount={MOCK_SUMMARY.netCashFlow}
-          currency={currency}
-          changePercent={MOCK_SUMMARY.deltas.netCashFlow}
-        />
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-24 w-full" />
+        ))}
       </div>
-
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <SpendingOverviewCard data={MOCK_SPENDING_BY_CATEGORY} currency={currency} />
-        </div>
-        <FinancialInsightCard title={MOCK_DASHBOARD_INSIGHT.title} body={MOCK_DASHBOARD_INSIGHT.body} />
-        <RecentTransactionsCard transactions={MOCK_RECENT_TRANSACTIONS} currency={currency} />
+        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-64 w-full" />
       </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <SpendingTrendCard data={MOCK_SPENDING_TREND} currency={currency} />
-        </div>
-        <div className="flex flex-col gap-4">
-          <TopCategoriesCard data={MOCK_SPENDING_BY_CATEGORY} currency={currency} />
-          <AllocationCard
-            income={MOCK_SUMMARY.income}
-            savings={MOCK_ALLOCATION.savings}
-            investment={MOCK_ALLOCATION.investment}
-            target={profile?.allocationTarget ?? 30}
-            currency={currency}
-          />
-        </div>
-      </div>
+      <Skeleton className="h-72 w-full" />
     </div>
   );
 }

@@ -29,7 +29,12 @@ export function RecentTransactionsCard({ transactions, currency }: RecentTransac
         </Link>
       </CardHeader>
       <div className="p-5 pt-3">
-        {groups.map((group) => (
+        {transactions.length === 0 ? (
+          <p className="py-4 text-center text-sm text-text-tertiary">
+            No transactions yet. Add your first income or expense to see it here.
+          </p>
+        ) : (
+          groups.map((group) => (
           <div key={group} className="mb-4 last:mb-0">
             <p className="mb-2 text-xs font-medium text-text-tertiary">{group}</p>
             <ul className="space-y-3">
@@ -68,7 +73,8 @@ export function RecentTransactionsCard({ transactions, currency }: RecentTransac
                 })}
             </ul>
           </div>
-        ))}
+          ))
+        )}
       </div>
     </Card>
   );

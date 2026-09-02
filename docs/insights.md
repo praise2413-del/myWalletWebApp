@@ -36,9 +36,13 @@ Stored as `profiles.allocation_target` (default `30`), editable in Settings → 
 
 No insight — allocation or otherwise — recommends a specific financial product, stock, cryptocurrency, or institution. The system tracks and explains the user's own recorded behavior; it is not a financial adviser.
 
+## Descriptive spending insight (Dashboard teaser)
+
+`src/lib/insights/spending.ts` — `getTopCategoryInsight()` — is the simplest possible descriptive insight: which expense category took the largest share of the selected period. Purely factual, no invented "vs last month" comparison (that's a comparative insight and belongs to the full engine built in Phase 7, once it has real prior-period logic to be honest about). Powers the Dashboard's "Financial Insight" card until Phase 7 lands.
+
 ## Where this shows up
 
-- **Dashboard**: `AllocationCard` (`src/features/dashboard/components/AllocationCard.tsx`) — percentage, allocated/income amounts, a progress bar with a target marker, and the current status. Links to the Insights page. Currently rendered with mock data pending Phase 4/5 (real transaction/allocation recording and live dashboard queries).
+- **Dashboard**: `AllocationCard` (`src/features/dashboard/components/AllocationCard.tsx`) — percentage, allocated/income amounts, a progress bar with a target marker, and the current status. Links to the Insights page. Live since Phase 5: `useDashboardData` sums real income and allocations for the selected dashboard period (This Week/Month/Year).
 - **Insights page** (Phase 7, not yet built): a dedicated "Savings & Investment" section alongside descriptive/comparative/behavioral insights.
 - **Reports** (Phase 6, not yet built): allocation total/rate/target/status for the selected report period — daily/weekly/monthly/yearly/custom, computed only from that period's income and allocations, never mixed across periods.
-- **Transaction recording** (Phase 4, not yet built): a saving/investment allocation entry point alongside Add Income/Add Expense — planned as part of Phase 4, not a separate mini-app.
+- **Transaction recording** (Phase 4, done): "Savings & Investment" tab and `AllocationFormModal` on the Transactions page, alongside Add Income/Add Expense.

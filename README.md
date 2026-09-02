@@ -39,7 +39,7 @@ src/
 ├── components/    # shared ui/, layout/, charts/
 ├── features/      # one folder per feature: dashboard, transactions, reports, insights, categories, settings
 ├── hooks/         # shared hooks
-├── lib/           # supabase client, utils, validation, mock data (removed as features connect to Supabase)
+├── lib/           # supabase client, utils, validation, insights engine
 ├── types/         # shared TypeScript types
 └── styles/        # global CSS lives in src/index.css
 ```
@@ -80,4 +80,5 @@ Built in phases (foundation → Supabase → auth → transactions → dashboard
 - ✅ **Phase 3 — Authentication**: register/login/logout/forgot-reset/change-password, protected routes.
 - ✅ **Savings & Investment Allocation** (pulled forward ahead of Phase 4 so later phases can be built with it from the start): schema, calculation/insight engine (with tests), Settings target field, Dashboard preview card. See `docs/insights.md`.
 - ✅ **Phase 4 — Transactions**: full CRUD for income/expense transactions and savings/investment allocations (add/edit/delete, search, type/date filters, sort, pagination), real category data, RLS- and trigger-verified against the live database.
-- ⏳ **Phase 5 onward** (real dashboard/report queries, insights page, categories CRUD UI, deployment): not started. The Dashboard still renders on mock data (`src/lib/mock/`) pending Phase 5.
+- ✅ **Phase 5 — Dashboard**: balance, income, expenses, net cash flow, spending overview, recent transactions, spending trend, and the savings/investment allocation card are all live Supabase queries (This Week/Month/Year, with period-over-period deltas and empty states) — no more mock data.
+- ⏳ **Phase 6 onward** (Reports, Insights page, Categories CRUD UI, deployment): not started.
