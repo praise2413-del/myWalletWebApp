@@ -12,9 +12,11 @@ import { TextField } from "@/components/ui/TextField";
 import { useAuth } from "@/hooks/useAuth";
 import { type ThemeMode, useThemeStore } from "@/hooks/useThemeStore";
 import { useToastStore } from "@/hooks/useToastStore";
+import { DeleteAccountDialog } from "@/features/settings/components/DeleteAccountDialog";
 import { supabase } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/utils/authErrors";
 import { cn } from "@/lib/utils/cn";
+import { exportUserDataAsCsv } from "@/lib/utils/exportData";
 import { type ChangePasswordInput, changePasswordSchema } from "@/lib/validations/auth";
 
 const TABS = [
@@ -283,13 +285,40 @@ function SecurityTab() {
 }
 
 function DataTab() {
+  const { user, signOut } = useAuth();
+  const showToast = useToastStore((state) => state.showToast);
+  const [exporting, setExporting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleExport = async () => {
+    if (!user) return;
+    setExporting(true);
+    const result = await exportUserDataAsCsv(user.id);
+    setExporting(false);
+    if (result.error) {
+      showToast(result.error, "error");
+      return;
+    }
+    showToast("Export downloaded");
+  };
+
+  const handleDeleteAccount = async () => {
+    const { error } = await supabase.rpc("delete_own_account");
+    if (error) {
+      return { error: "We couldn't delete your account. Please try again." };
+    }
+    await signOut();
+  };
+
   return (
     <div className="max-w-md space-y-4">
       <div>
         <h2 className="text-sm font-semibold text-text-primary">Export your data</h2>
-        <p className="mt-1 text-xs text-text-tertiary">Download your transactions as a CSV file.</p>
-        <Button size="sm" variant="outline" className="mt-3" disabled>
-          Export Data
+        <p className="mt-1 text-xs text-text-tertiary">
+          Download all your transactions and savings/investment allocations as a CSV file.
+        </p>
+        <Button size="sm" variant="outline" className="mt-3" onClick={handleExport} disabled={exporting}>
+          {exporting ? "Preparing..." : "Export Data"}
         </Button>
       </div>
       <div className="border-t border-border pt-4">
@@ -297,10 +326,16 @@ function DataTab() {
         <p className="mt-1 text-xs text-text-tertiary">
           Permanently delete your account and all associated financial data.
         </p>
-        <Button size="sm" variant="danger" className="mt-3" disabled>
+        <Button size="sm" variant="danger" className="mt-3" onClick={() => setDeleteDialogOpen(true)}>
           Delete Account
         </Button>
       </div>
+
+      <DeleteAccountDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDeleteAccount}
+      />
     </div>
   );
 }

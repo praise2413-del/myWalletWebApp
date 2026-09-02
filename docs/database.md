@@ -22,6 +22,10 @@ A transaction's `type` must match its category's `type`, and the category must b
 
 `handle_new_user()` fires `AFTER INSERT ON auth.users` and, in one transaction, creates the `profiles` row and inserts all 20 default categories (13 expense + 7 income, matching the master spec exactly) for that user. This is why a fresh signup already has a full category list with zero setup.
 
+## Self-service account deletion
+
+`delete_own_account()` is a `SECURITY DEFINER` RPC (`supabase.rpc("delete_own_account")`) that deletes the caller's own `auth.users` row — `auth.uid()` is derived server-side from the verified JWT, never client-supplied, so it can only ever delete the calling user's own account. Every table above has `on delete cascade` back to `auth.users`, so this one call removes the profile, every category, transaction, and allocation in the same statement. There is no other way for a client to delete from `auth.users`: it isn't exposed via PostgREST, and RLS can't scope a delete to "your own auth identity" the way it scopes the app tables.
+
 ## RLS
 
 Every table (`profiles`, `categories`, `transactions`, `allocations`) has `ROW LEVEL SECURITY` enabled with `auth.uid() = user_id` (or `= id` for `profiles`) policies for select/insert/update, and delete besides `categories`, whose delete policy additionally requires `is_default = false` — default categories can be edited but not removed. See `docs/security.md` (added in the QA phase) for the full threat-model writeup; the policies themselves are the enforcement, not a UI convention.
