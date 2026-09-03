@@ -13,7 +13,7 @@ import { InsightsSection } from "@/features/reports/components/preview/sections/
 import { ReportDocumentHeader } from "@/features/reports/components/preview/sections/ReportDocumentHeader";
 import { SavingsInvestmentSection } from "@/features/reports/components/preview/sections/SavingsInvestmentSection";
 import { fetchReportRecords, type ReportRecords } from "@/features/reports/lib/fetchReportRecords";
-import { generateReportPdf } from "@/features/reports/lib/pdf/generateReportPdf";
+import { generateReportPdf, PdfModuleLoadError } from "@/features/reports/lib/pdf/generateReportPdf";
 import { buildReportModel } from "@/features/reports/lib/reportModel";
 import type { ReportData } from "@/features/reports/hooks/useReportsData";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -45,6 +45,7 @@ export function ReportPreviewOverlay({ onClose, period, customRange, reportData,
   const [recordsState, setRecordsState] = useState<{ data?: ReportRecords; error?: string } | null>(null);
   const [retryToken, setRetryToken] = useState(0);
   const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<{ message: string; staleBuild: boolean } | null>(null);
 
   const rangeStartKey = reportData.range.start.getTime();
   const rangeEndKey = reportData.range.end.getTime();
@@ -106,10 +107,21 @@ export function ReportPreviewOverlay({ onClose, period, customRange, reportData,
   async function handleDownload() {
     if (!model) return;
     setDownloading(true);
+    setDownloadError(null);
     try {
       await generateReportPdf(model);
-    } catch {
-      showToast("We couldn't generate the PDF. Please try again.", "error");
+      showToast("Report downloaded.", "success");
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Report PDF generation failed:", err);
+      if (err instanceof PdfModuleLoadError) {
+        setDownloadError({
+          message: "myWallet was updated since you opened this page, so the PDF tool couldn't load. Refresh the page and try again.",
+          staleBuild: true,
+        });
+      } else {
+        setDownloadError({ message: "We couldn't generate the PDF. Please try again.", staleBuild: false });
+      }
     } finally {
       setDownloading(false);
     }
@@ -191,23 +203,34 @@ export function ReportPreviewOverlay({ onClose, period, customRange, reportData,
           )}
         </div>
 
-        <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border bg-surface-elevated px-5 py-4">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleDownload} disabled={status !== "ready" || !model || downloading}>
-            {downloading ? (
-              <>
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                Generating…
-              </>
+        <div className="shrink-0 border-t border-border bg-surface-elevated">
+          {downloadError && (
+            <div className="px-5 pt-4">
+              <AlertBanner message={downloadError.message} />
+            </div>
+          )}
+          <div className="flex items-center justify-end gap-3 px-5 py-4">
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            {downloadError?.staleBuild ? (
+              <Button onClick={() => window.location.reload()}>Refresh page</Button>
             ) : (
-              <>
-                <Download className="size-4" aria-hidden="true" />
-                Download PDF
-              </>
+              <Button onClick={handleDownload} disabled={status !== "ready" || !model || downloading}>
+                {downloading ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    Generating…
+                  </>
+                ) : (
+                  <>
+                    <Download className="size-4" aria-hidden="true" />
+                    Download PDF
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
+          </div>
         </div>
       </div>
     </div>
