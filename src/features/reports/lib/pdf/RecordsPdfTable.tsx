@@ -50,7 +50,7 @@ export function RecordsPdfTable({
 
   return (
     <View style={styles.table} wrap>
-      <View style={styles.headerRow} fixed>
+      <View style={styles.headerRow}>
         <View style={styles.accent} />
         <Text style={[styles.cellHeader, styles.colDate]}>Date</Text>
         <Text style={[styles.cellHeader, styles.colLabel]}>{labelHeader}</Text>

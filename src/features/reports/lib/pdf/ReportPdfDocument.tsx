@@ -176,67 +176,61 @@ export function ReportPdfDocument({ model }: { model: ReportModel }) {
       </Page>
 
       {!model.isEmpty && (
-        <>
-          {/* Page 2 — Income */}
-          <Page size="A4" style={styles.page}>
-            <FixedHeader periodTitle={model.periodTitle} />
-            <FixedFooter />
-            <Text style={styles.sectionTitle}>Income Analysis</Text>
-            <Text style={styles.sectionSubtitle}>
-              {formatCurrency(model.income.total, model.currency)} recorded across {model.income.count}{" "}
-              {model.income.count === 1 ? "record" : "records"}
-              {model.income.trendPercent !== 0 ? ` · ${model.income.trendPercent > 0 ? "up" : "down"} ${formatPercent(Math.abs(model.income.trendPercent), 0)} vs. previous period` : ""}
-            </Text>
-            <RecordsPdfTable
-              rows={model.income.records}
-              currency={model.currency}
-              accentColor={pdfPalette.income}
-              emptyLabel="No income recorded for this period."
-              labelHeader="Source"
-            />
-          </Page>
+        // A single flowing `<Page>` for every remaining section — react-pdf
+        // auto-paginates content that overflows one physical page, so this
+        // packs pages tightly (like the preview's continuous scroll) instead
+        // of pinning each section to its own fresh page, which was leaving
+        // large forced blank gaps whenever a section didn't fill a page.
+        <Page size="A4" style={styles.page}>
+          <FixedHeader periodTitle={model.periodTitle} />
+          <FixedFooter />
 
-          {/* Page 3 — Expenses */}
-          <Page size="A4" style={styles.page}>
-            <FixedHeader periodTitle={model.periodTitle} />
-            <FixedFooter />
-            <Text style={styles.sectionTitle}>Expense Analysis</Text>
-            <Text style={styles.sectionSubtitle}>
-              {formatCurrency(model.expense.total, model.currency)} spent across {model.expense.count}{" "}
-              {model.expense.count === 1 ? "record" : "records"}
-              {model.expense.largestCategory ? ` · Largest category: ${model.expense.largestCategory.name}` : ""}
-            </Text>
+          <Text style={styles.sectionTitle} minPresenceAhead={60}>Income Analysis</Text>
+          <Text style={styles.sectionSubtitle}>
+            {formatCurrency(model.income.total, model.currency)} recorded across {model.income.count}{" "}
+            {model.income.count === 1 ? "record" : "records"}
+            {model.income.trendPercent !== 0 ? ` · ${model.income.trendPercent > 0 ? "up" : "down"} ${formatPercent(Math.abs(model.income.trendPercent), 0)} vs. previous period` : ""}
+          </Text>
+          <RecordsPdfTable
+            rows={model.income.records}
+            currency={model.currency}
+            accentColor={pdfPalette.income}
+            emptyLabel="No income recorded for this period."
+            labelHeader="Source"
+          />
 
-            {model.expense.distribution.length > 0 && (
-              <View style={styles.chartCard} wrap={false}>
-                <Text style={styles.chartTitle}>Expense Distribution by Category</Text>
-                <PdfDonutChart
-                  data={model.expense.distribution.map((d, i) => ({
-                    name: d.name,
-                    amount: d.amount,
-                    color: pdfPalette.chartSeries[i % pdfPalette.chartSeries.length],
-                  }))}
-                  currency={model.currency}
-                />
-              </View>
-            )}
+          <Text style={styles.sectionTitle} minPresenceAhead={60}>Expense Analysis</Text>
+          <Text style={styles.sectionSubtitle}>
+            {formatCurrency(model.expense.total, model.currency)} spent across {model.expense.count}{" "}
+            {model.expense.count === 1 ? "record" : "records"}
+            {model.expense.largestCategory ? ` · Largest category: ${model.expense.largestCategory.name}` : ""}
+          </Text>
 
-            <RecordsPdfTable
-              rows={model.expense.records}
-              currency={model.currency}
-              accentColor={pdfPalette.expense}
-              emptyLabel="No expenses recorded for this period."
-              labelHeader="Category"
-            />
-          </Page>
-
-          {/* Page 4 — Savings & Investment + Insights */}
-          <Page size="A4" style={styles.page}>
-            <FixedHeader periodTitle={model.periodTitle} />
-            <FixedFooter />
-            <Text style={styles.sectionTitle}>Savings & Investment</Text>
-
+          {model.expense.distribution.length > 0 && (
             <View style={styles.chartCard} wrap={false}>
+              <Text style={styles.chartTitle}>Expense Distribution by Category</Text>
+              <PdfDonutChart
+                data={model.expense.distribution.map((d, i) => ({
+                  name: d.name,
+                  amount: d.amount,
+                  color: pdfPalette.chartSeries[i % pdfPalette.chartSeries.length],
+                }))}
+                currency={model.currency}
+              />
+            </View>
+          )}
+
+          <RecordsPdfTable
+            rows={model.expense.records}
+            currency={model.currency}
+            accentColor={pdfPalette.expense}
+            emptyLabel="No expenses recorded for this period."
+            labelHeader="Category"
+          />
+
+          <Text style={styles.sectionTitle} minPresenceAhead={60}>Savings & Investment</Text>
+
+          <View style={styles.chartCard} wrap={false}>
               <View style={styles.allocationRow}>
                 <Text style={styles.allocationLabel}>Savings</Text>
                 <Text style={[styles.allocationValue, { color: pdfPalette.savings }]}>{formatCurrency(model.savingsInvestment.savings, model.currency)}</Text>
@@ -300,23 +294,28 @@ export function ReportPdfDocument({ model }: { model: ReportModel }) {
               </View>
             )}
 
-            {insightsBySection.length > 0 && (
-              <>
-                <Text style={styles.sectionTitle}>Financial Insights</Text>
-                {insightsBySection.map((group) => (
-                  <View key={group.section} style={{ marginBottom: 10 }} wrap={false}>
+          {insightsBySection.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Financial Insights</Text>
+              {insightsBySection.map((group) => (
+                <View key={group.section} style={{ marginBottom: 10 }}>
+                  {/* Heading stays glued to its first card so it's never left
+                      orphaned alone at the bottom of a page — the remaining
+                      cards can still flow onto the next page independently. */}
+                  <View wrap={false}>
                     <Text style={{ fontSize: 9.5, fontFamily: "Helvetica-Bold", color: pdfPalette.textSecondary, marginBottom: 6 }}>
                       {SECTION_HEADING[group.section]}
                     </Text>
-                    {group.items.map((item) => (
-                      <InsightCard key={item.insight.id} insight={item.insight} />
-                    ))}
+                    <InsightCard insight={group.items[0].insight} />
                   </View>
-                ))}
-              </>
-            )}
-          </Page>
-        </>
+                  {group.items.slice(1).map((item) => (
+                    <InsightCard key={item.insight.id} insight={item.insight} />
+                  ))}
+                </View>
+              ))}
+            </>
+          )}
+        </Page>
       )}
     </Document>
   );
