@@ -53,7 +53,7 @@ export function Sidebar() {
           </NavLink>
         </div>
         <a
-          href="mailto:support@mywallet.app"
+          href="mailto:praise2413@gmail.com"
           className="flex items-center gap-2 rounded-lg px-1 py-2 text-xs font-medium text-text-tertiary transition-colors hover:text-text-secondary"
         >
           <LifeBuoy className="size-4" aria-hidden="true" />

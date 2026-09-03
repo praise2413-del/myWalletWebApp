@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 const LINKS = [
   { label: "Categories", to: "/categories", icon: Tags },
   { label: "Settings", to: "/settings", icon: Settings },
-  { label: "Help & Support", to: "mailto:support@mywallet.app", icon: HelpCircle },
+  { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];
 
 export default function MorePage() {

@@ -70,7 +70,7 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection title="9. Contact">
-        <p>Questions about this policy, or a data request? Reach us at support@mywallet.app.</p>
+        <p>Questions about this policy, or a data request? Reach us at praise2413@gmail.com.</p>
       </LegalSection>
     </LegalLayout>
   );

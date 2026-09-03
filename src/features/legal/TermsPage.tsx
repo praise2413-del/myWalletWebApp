@@ -82,7 +82,7 @@ export default function TermsPage() {
       </LegalSection>
 
       <LegalSection title="10. Contact">
-        <p>Questions about these terms? Reach us at support@mywallet.app.</p>
+        <p>Questions about these terms? Reach us at praise2413@gmail.com.</p>
       </LegalSection>
     </LegalLayout>
   );
