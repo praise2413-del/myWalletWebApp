@@ -23,6 +23,7 @@ export default defineConfig({
           if (!id.includes('node_modules')) return undefined
           if (id.includes('recharts')) return 'vendor-charts'
           if (id.includes('@supabase')) return 'vendor-supabase'
+          if (id.includes('@react-pdf') || id.includes('fontkit') || id.includes('yoga-layout') || id.includes('restructure')) return 'vendor-pdf'
           if (/[/\\](react|react-dom|react-router-dom|scheduler)[/\\]/.test(id)) return 'vendor-react'
           return undefined
         },

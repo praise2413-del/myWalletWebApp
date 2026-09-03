@@ -1,6 +1,8 @@
+import { FileText } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AlertBanner } from "@/components/ui/AlertBanner";
+import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StatCard } from "@/components/ui/StatCard";
 import { AllocationCard } from "@/features/dashboard/components/AllocationCard";
@@ -12,6 +14,7 @@ import { CategoryComparisonCard } from "@/features/reports/components/CategoryCo
 import { IncomeVsExpenseCard } from "@/features/reports/components/IncomeVsExpenseCard";
 import { ReportHighlights } from "@/features/reports/components/ReportHighlights";
 import { ReportPeriodControls } from "@/features/reports/components/ReportPeriodControls";
+import { ReportPreviewOverlay } from "@/features/reports/components/preview/ReportPreviewOverlay";
 import { useReportsData } from "@/features/reports/hooks/useReportsData";
 import { useAuth } from "@/hooks/useAuth";
 import { toDateKey } from "@/lib/utils/period";
@@ -41,19 +44,26 @@ export default function ReportsPage() {
   }, [period, customStart, customEnd]);
 
   const { data, loading, error } = useReportsData(period, customRange);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   return (
     <div className="space-y-6">
       <PageHeader title="Reports & Analytics" description="Understand your spending patterns over time" />
 
-      <ReportPeriodControls
-        period={period}
-        onPeriodChange={setPeriod}
-        customStart={customStart}
-        customEnd={customEnd}
-        onCustomStartChange={setCustomStart}
-        onCustomEndChange={setCustomEnd}
-      />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <ReportPeriodControls
+          period={period}
+          onPeriodChange={setPeriod}
+          customStart={customStart}
+          customEnd={customEnd}
+          onCustomStartChange={setCustomStart}
+          onCustomEndChange={setCustomEnd}
+        />
+        <Button onClick={() => setPreviewOpen(true)} disabled={loading || !!error} className="shrink-0">
+          <FileText className="size-4" aria-hidden="true" />
+          Generate Report
+        </Button>
+      </div>
 
       {error && <AlertBanner message={error} />}
 
@@ -114,6 +124,17 @@ export default function ReportsPage() {
 
           <CategoryBreakdownTable data={data.categoryBreakdown} currency={currency} />
         </>
+      )}
+
+      {previewOpen && (
+        <ReportPreviewOverlay
+          onClose={() => setPreviewOpen(false)}
+          period={period}
+          customRange={customRange}
+          reportData={data}
+          currency={currency}
+          allocationTarget={profile?.allocationTarget ?? 30}
+        />
       )}
     </div>
   );
