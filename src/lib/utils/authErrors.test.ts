@@ -32,6 +32,24 @@ describe("friendlyAuthError", () => {
     );
   });
 
+  it("maps a session that expired mid-form", () => {
+    expect(friendlyAuthError("Auth session missing!")).toBe(
+      "Your session expired before this could finish. Please request a new reset link and try again.",
+    );
+  });
+
+  it("maps reusing the current password", () => {
+    expect(friendlyAuthError("New password should be different from the old password.")).toBe(
+      "Please choose a password different from your current one.",
+    );
+  });
+
+  it("maps an expired or already-used link", () => {
+    expect(friendlyAuthError("Email link is invalid or has expired")).toBe(
+      "This link is no longer valid. Please request a new one.",
+    );
+  });
+
   it("falls back to a generic message for anything unrecognized", () => {
     expect(friendlyAuthError("some unexpected supabase error")).toBe("Something went wrong. Please try again.");
   });

@@ -16,6 +16,15 @@ export function friendlyAuthError(message: string): string {
   if (lower.includes("rate limit")) {
     return "Too many attempts. Please wait a moment and try again.";
   }
+  if (lower.includes("session missing") || lower.includes("session expired") || lower.includes("session not found")) {
+    return "Your session expired before this could finish. Please request a new reset link and try again.";
+  }
+  if (lower.includes("should be different from the old password")) {
+    return "Please choose a password different from your current one.";
+  }
+  if (lower.includes("expired") || lower.includes("invalid or has expired") || lower.includes("otp_expired")) {
+    return "This link is no longer valid. Please request a new one.";
+  }
 
   return "Something went wrong. Please try again.";
 }
