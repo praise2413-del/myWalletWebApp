@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailCheck } from "lucide-react";
-import { useState } from "react";
+import { type FocusEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AlertBanner } from "@/components/ui/AlertBanner";
@@ -10,18 +10,48 @@ import { TextField } from "@/components/ui/TextField";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { supabase } from "@/lib/supabase/client";
 import { friendlyAuthError } from "@/lib/utils/authErrors";
+import { domainAcceptsEmail, extractEmailDomain } from "@/lib/utils/emailDomainCheck";
 import { type RegisterInput, registerSchema } from "@/lib/validations/auth";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [formError, setFormError] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+  const [checkingEmail, setCheckingEmail] = useState(false);
 
   const {
     register,
     handleSubmit,
+    trigger,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({ resolver: zodResolver(registerSchema) });
+
+  // Beyond the zod format check, verify the domain can actually receive
+  // mail (catches typos like gmial.com or a nonexistent domain) — only
+  // runs once the format itself is already valid, and never blocks
+  // signup if the lookup itself is inconclusive (see domainAcceptsEmail).
+  const emailRegistration = register("email", {
+    onBlur: async (e: FocusEvent<HTMLInputElement>) => {
+      const formatValid = await trigger("email");
+      if (!formatValid) return;
+
+      const domain = extractEmailDomain(e.target.value);
+      if (!domain) return;
+
+      setCheckingEmail(true);
+      const result = await domainAcceptsEmail(domain);
+      setCheckingEmail(false);
+
+      if (result === false) {
+        setError("email", { type: "manual", message: "Invalid email" });
+      }
+    },
+    onChange: () => {
+      clearErrors("email");
+    },
+  });
 
   const onSubmit = async ({ fullName, email, password }: RegisterInput) => {
     setFormError(null);
@@ -101,9 +131,10 @@ export default function RegisterPage() {
           label="Email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder="enter valid email only"
           error={errors.email?.message}
-          {...register("email")}
+          hint={checkingEmail ? "Checking email…" : undefined}
+          {...emailRegistration}
         />
         <PasswordField
           label="Password"
