@@ -105,6 +105,54 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_read: boolean
+          message: string
+          period_end: string | null
+          period_start: string | null
+          read_at: string | null
+          reference_id: string | null
+          reference_type: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          period_end?: string | null
+          period_start?: string | null
+          read_at?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          period_end?: string | null
+          period_start?: string | null
+          read_at?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           allocation_target: number
@@ -182,9 +230,11 @@ export type Database = {
     }
     Functions: {
       delete_own_account: { Args: never; Returns: undefined }
+      generate_weekly_report_notifications: { Args: never; Returns: undefined }
     }
     Enums: {
       allocation_type: "SAVING" | "INVESTMENT"
+      notification_type: "WEEKLY_REPORT" | "PASSWORD_RESET"
       transaction_type: "INCOME" | "EXPENSE"
     }
     CompositeTypes: {
@@ -317,6 +367,7 @@ export const Constants = {
   public: {
     Enums: {
       allocation_type: ["SAVING", "INVESTMENT"],
+      notification_type: ["WEEKLY_REPORT", "PASSWORD_RESET"],
       transaction_type: ["INCOME", "EXPENSE"],
     },
   },

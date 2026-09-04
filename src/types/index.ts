@@ -59,3 +59,22 @@ export interface Insight {
   explanation: string;
   comparison?: string;
 }
+
+/** Extend as new server-generated notification types are added (see migration). */
+export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  isRead: boolean;
+  readAt: string | null;
+  createdAt: string;
+  referenceType: string | null;
+  referenceId: string | null;
+  /** Set for WEEKLY_REPORT — the exact Monday-Sunday period this notification refers to. */
+  periodStart: string | null;
+  periodEnd: string | null;
+}

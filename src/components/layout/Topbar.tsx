@@ -1,4 +1,5 @@
-import { Bell, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { UserMenu } from "@/components/layout/UserMenu";
 
@@ -19,13 +20,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
       </button>
 
       <div className="ml-auto flex items-center gap-1.5">
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="flex size-9 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
-        >
-          <Bell className="size-[18px]" aria-hidden="true" />
-        </button>
+        <NotificationBell />
         <ThemeToggle />
         <div className="mx-1 h-6 w-px bg-border" aria-hidden="true" />
         <UserMenu />

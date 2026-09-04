@@ -1,5 +1,6 @@
 import { FileText } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AlertBanner } from "@/components/ui/AlertBanner";
 import { Button } from "@/components/ui/Button";
@@ -33,9 +34,19 @@ export default function ReportsPage() {
   const { profile } = useAuth();
   const currency = profile?.currency ?? "TZS";
 
-  const [period, setPeriod] = useState<ReportPeriod>("monthly");
-  const [customStart, setCustomStart] = useState(firstOfMonth());
-  const [customEnd, setCustomEnd] = useState(today());
+  // A notification's "View Report" link deep-links here with the exact
+  // period it refers to, e.g. /reports?period=custom&start=2026-08-31&
+  // end=2026-09-06&openReport=1 — reusing this same Reports engine and
+  // preview rather than a second reporting path.
+  const [searchParams] = useSearchParams();
+  const deepLinkStart = searchParams.get("start");
+  const deepLinkEnd = searchParams.get("end");
+  const hasDeepLinkRange = searchParams.get("period") === "custom" && !!deepLinkStart && !!deepLinkEnd;
+  const shouldAutoOpenReport = searchParams.get("openReport") === "1" && hasDeepLinkRange;
+
+  const [period, setPeriod] = useState<ReportPeriod>(hasDeepLinkRange ? "custom" : "monthly");
+  const [customStart, setCustomStart] = useState(hasDeepLinkRange ? (deepLinkStart as string) : firstOfMonth());
+  const [customEnd, setCustomEnd] = useState(hasDeepLinkRange ? (deepLinkEnd as string) : today());
 
   const customRange = useMemo(() => {
     if (period !== "custom" || !customStart || !customEnd) return undefined;
@@ -45,6 +56,14 @@ export default function ReportsPage() {
 
   const { data, loading, error } = useReportsData(period, customRange);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [autoOpenHandled, setAutoOpenHandled] = useState(false);
+
+  useEffect(() => {
+    if (shouldAutoOpenReport && !loading && !error && !autoOpenHandled) {
+      setPreviewOpen(true);
+      setAutoOpenHandled(true);
+    }
+  }, [shouldAutoOpenReport, loading, error, autoOpenHandled]);
 
   return (
     <div className="space-y-6">

@@ -11,6 +11,8 @@ const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
 const CategoriesPage = lazy(() => import("@/features/categories/CategoriesPage"));
 const SettingsPage = lazy(() => import("@/features/settings/SettingsPage"));
 const MorePage = lazy(() => import("@/features/more/MorePage"));
+const NotificationsPage = lazy(() => import("@/features/notifications/NotificationsPage"));
+const NotificationDetailPage = lazy(() => import("@/features/notifications/NotificationDetailPage"));
 const LoginPage = lazy(() => import("@/features/auth/LoginPage"));
 const RegisterPage = lazy(() => import("@/features/auth/RegisterPage"));
 const ForgotPasswordPage = lazy(() => import("@/features/auth/ForgotPasswordPage"));
@@ -57,6 +59,8 @@ const router = createBrowserRouter([
           { path: "/categories", element: withSuspense(<CategoriesPage />) },
           { path: "/settings", element: withSuspense(<SettingsPage />) },
           { path: "/more", element: withSuspense(<MorePage />) },
+          { path: "/notifications", element: withSuspense(<NotificationsPage />) },
+          { path: "/notifications/:id", element: withSuspense(<NotificationDetailPage />) },
         ],
       },
     ],
