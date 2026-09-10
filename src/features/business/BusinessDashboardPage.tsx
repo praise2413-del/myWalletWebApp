@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, BookText, FileBarChart, TrendingUp } from "lucide-react";
+import { ArrowRight, BookOpen, FileBarChart, FileText, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AlertBanner } from "@/components/ui/AlertBanner";
@@ -86,48 +86,13 @@ export default function BusinessDashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Get Started</CardTitle>
+            <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-text-secondary">
-              Record double-entry transactions in the Journal, trace any account's full history in the
-              General Ledger, and read your Trial Balance, Income Statement, Balance Sheet, and Cash
-              Flow in Financial Statements.
-            </p>
-            <Link
-              to="/business/journal"
-              className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
-            >
-              <span className="flex items-center gap-2">
-                <BookOpen className="size-4 text-text-secondary" aria-hidden="true" />
-                Journal Entries
-              </span>
-              <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
-            </Link>
-            <Link
-              to="/business/statements"
-              className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
-            >
-              <span className="flex items-center gap-2">
-                <FileBarChart className="size-4 text-text-secondary" aria-hidden="true" />
-                Financial Statements
-              </span>
-              <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
-            </Link>
-            <Link
-              to="/business/accounts"
-              className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
-            >
-              <span className="flex items-center gap-2">
-                <BookText className="size-4 text-text-secondary" aria-hidden="true" />
-                Chart of Accounts
-              </span>
-              <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
-            </Link>
-            <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-3 text-xs text-text-tertiary">
-              <TrendingUp className="size-4 shrink-0" aria-hidden="true" />
-              Sales, purchases, customers, suppliers, and richer reporting unlock in later phases.
-            </div>
+          <CardContent className="space-y-2">
+            <QuickLink to="/business/sales" icon={FileText} label="New Sale Invoice" />
+            <QuickLink to="/business/purchases" icon={Receipt} label="New Purchase Bill" />
+            <QuickLink to="/business/journal" icon={BookOpen} label="New Journal Entry" />
+            <QuickLink to="/business/statements" icon={FileBarChart} label="View Financial Statements" />
           </CardContent>
         </Card>
       </div>
@@ -141,5 +106,20 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       <span className="text-text-tertiary">{label}</span>
       <span className="font-medium text-text-primary">{value}</span>
     </div>
+  );
+}
+
+function QuickLink({ to, icon: Icon, label }: { to: string; icon: typeof FileText; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
+    >
+      <span className="flex items-center gap-2">
+        <Icon className="size-4 text-text-secondary" aria-hidden="true" />
+        {label}
+      </span>
+      <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
+    </Link>
   );
 }

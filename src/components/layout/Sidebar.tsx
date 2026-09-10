@@ -20,24 +20,33 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Main navigation">
-        {items.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === "/"}
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-primary-600 text-white shadow-sm dark:border-primary-500/30 dark:bg-primary-500/15 dark:text-primary-400 dark:shadow-none"
-                  : "text-text-secondary hover:bg-background hover:text-text-primary",
-              )
-            }
-          >
-            <item.icon className="size-[18px] shrink-0" aria-hidden="true" />
-            {item.label}
-          </NavLink>
-        ))}
+        {items.map((item, index) => {
+          const showSectionHeading = item.section && item.section !== items[index - 1]?.section;
+          return (
+            <div key={item.path}>
+              {showSectionHeading && (
+                <p className="mb-1 mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-text-tertiary first:mt-0">
+                  {item.section}
+                </p>
+              )}
+              <NavLink
+                to={item.path}
+                end={item.path === "/"}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-primary-600 text-white shadow-sm dark:border-primary-500/30 dark:bg-primary-500/15 dark:text-primary-400 dark:shadow-none"
+                      : "text-text-secondary hover:bg-background hover:text-text-primary",
+                  )
+                }
+              >
+                <item.icon className="size-[18px] shrink-0" aria-hidden="true" />
+                {item.label}
+              </NavLink>
+            </div>
+          );
+        })}
       </nav>
 
       <div className="space-y-3 border-t border-border p-4">

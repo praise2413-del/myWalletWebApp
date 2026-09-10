@@ -145,6 +145,124 @@ export interface AccountBalance {
   balance: number;
 }
 
+export interface Customer {
+  id: string;
+  businessId: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Supplier {
+  id: string;
+  businessId: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  notes: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Product {
+  id: string;
+  businessId: string;
+  sku: string;
+  name: string;
+  description: string;
+  unitPrice: number;
+  costPrice: number;
+  quantityOnHand: number;
+  incomeAccountId: string;
+  expenseAccountId: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SaleLine {
+  id: string;
+  saleId: string;
+  productId: string;
+  product: Pick<Product, "id" | "name" | "sku">;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  lineOrder: number;
+}
+
+export interface SalePayment {
+  id: string;
+  saleId: string;
+  paymentDate: string;
+  amount: number;
+  accountId: string;
+  accountName: string;
+  createdAt: string;
+}
+
+export interface Sale {
+  id: string;
+  businessId: string;
+  customerId: string | null;
+  customerName: string | null;
+  invoiceNumber: string;
+  invoiceDate: string;
+  dueDate: string | null;
+  notes: string;
+  journalEntryId: string | null;
+  createdAt: string;
+  lines: SaleLine[];
+  payments: SalePayment[];
+  total: number;
+  amountPaid: number;
+}
+
+export interface PurchaseLine {
+  id: string;
+  purchaseId: string;
+  productId: string;
+  product: Pick<Product, "id" | "name" | "sku">;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  lineOrder: number;
+}
+
+export interface PurchasePayment {
+  id: string;
+  purchaseId: string;
+  paymentDate: string;
+  amount: number;
+  accountId: string;
+  accountName: string;
+  createdAt: string;
+}
+
+export interface Purchase {
+  id: string;
+  businessId: string;
+  supplierId: string | null;
+  supplierName: string | null;
+  billNumber: string;
+  billDate: string;
+  dueDate: string | null;
+  notes: string;
+  journalEntryId: string | null;
+  createdAt: string;
+  lines: PurchaseLine[];
+  payments: PurchasePayment[];
+  total: number;
+  amountPaid: number;
+}
+
 /** Extend as new server-generated notification types are added (see migration). */
 export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
 

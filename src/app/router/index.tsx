@@ -12,6 +12,11 @@ const ChartOfAccountsPage = lazy(() => import("@/features/business/ChartOfAccoun
 const JournalEntriesPage = lazy(() => import("@/features/business/JournalEntriesPage"));
 const GeneralLedgerPage = lazy(() => import("@/features/business/GeneralLedgerPage"));
 const BusinessStatementsPage = lazy(() => import("@/features/business/BusinessStatementsPage"));
+const CustomersPage = lazy(() => import("@/features/business/CustomersPage"));
+const SuppliersPage = lazy(() => import("@/features/business/SuppliersPage"));
+const ProductsPage = lazy(() => import("@/features/business/ProductsPage"));
+const SalesPage = lazy(() => import("@/features/business/SalesPage"));
+const PurchasesPage = lazy(() => import("@/features/business/PurchasesPage"));
 const TransactionsPage = lazy(() => import("@/features/transactions/TransactionsPage"));
 const ReportsPage = lazy(() => import("@/features/reports/ReportsPage"));
 const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
@@ -77,6 +82,11 @@ const router = createBrowserRouter([
               { path: "/business/journal", element: withSuspense(<JournalEntriesPage />) },
               { path: "/business/ledger", element: withSuspense(<GeneralLedgerPage />) },
               { path: "/business/statements", element: withSuspense(<BusinessStatementsPage />) },
+              { path: "/business/customers", element: withSuspense(<CustomersPage />) },
+              { path: "/business/suppliers", element: withSuspense(<SuppliersPage />) },
+              { path: "/business/products", element: withSuspense(<ProductsPage />) },
+              { path: "/business/sales", element: withSuspense(<SalesPage />) },
+              { path: "/business/purchases", element: withSuspense(<PurchasesPage />) },
             ],
           },
         ],

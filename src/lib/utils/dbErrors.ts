@@ -16,6 +16,9 @@ export function friendlyDbError(message: string, fallback: string): string {
   if (lower.includes("duplicate key") || lower.includes("already exists")) {
     return "You already have a category with that name.";
   }
+  if (lower.includes("sale_lines") || lower.includes("purchase_lines")) {
+    return "This product is used on an existing invoice or bill and can't be deleted. You can mark it inactive instead.";
+  }
   if (lower.includes("violates foreign key constraint") || lower.includes("is still referenced")) {
     return "This category still has transactions attached. Move or delete those first.";
   }
