@@ -83,6 +83,47 @@ export type Database = {
           },
         ]
       }
+      activity_log: {
+        Row: {
+          action: string
+          business_id: string
+          created_at: string
+          description: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          business_id: string
+          created_at?: string
+          description?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          business_id?: string
+          created_at?: string
+          description?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       allocations: {
         Row: {
           allocation_date: string
@@ -1129,6 +1170,17 @@ export type Database = {
       }
     }
     Functions: {
+      _log_activity: {
+        Args: {
+          p_action: string
+          p_business_id: string
+          p_description: string
+          p_entity_id: string
+          p_entity_type: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       _post_journal_lines: {
         Args: {
           p_business_id: string
@@ -1176,7 +1228,26 @@ export type Database = {
       }
       delete_own_account: { Args: never; Returns: undefined }
       generate_weekly_report_notifications: { Args: never; Returns: undefined }
+      get_business_member_emails: {
+        Args: { p_business_id: string }
+        Returns: {
+          email: string
+          user_id: string
+        }[]
+      }
+      invite_business_member: {
+        Args: {
+          p_business_id: string
+          p_email: string
+          p_role: Database["public"]["Enums"]["business_member_role"]
+        }
+        Returns: string
+      }
       is_business_member: {
+        Args: { target_business_id: string }
+        Returns: boolean
+      }
+      is_business_owner: {
         Args: { target_business_id: string }
         Returns: boolean
       }

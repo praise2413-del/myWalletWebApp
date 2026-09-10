@@ -20,6 +20,7 @@ const PurchasesPage = lazy(() => import("@/features/business/PurchasesPage"));
 const BusinessInsightsPage = lazy(() => import("@/features/business/BusinessInsightsPage"));
 const BusinessPlanningPage = lazy(() => import("@/features/business/BusinessPlanningPage"));
 const BusinessForecastPage = lazy(() => import("@/features/business/BusinessForecastPage"));
+const BusinessTeamPage = lazy(() => import("@/features/business/BusinessTeamPage"));
 const TransactionsPage = lazy(() => import("@/features/transactions/TransactionsPage"));
 const ReportsPage = lazy(() => import("@/features/reports/ReportsPage"));
 const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
@@ -93,6 +94,7 @@ const router = createBrowserRouter([
               { path: "/business/insights", element: withSuspense(<BusinessInsightsPage />) },
               { path: "/business/planning", element: withSuspense(<BusinessPlanningPage />) },
               { path: "/business/forecast", element: withSuspense(<BusinessForecastPage />) },
+              { path: "/business/team", element: withSuspense(<BusinessTeamPage />) },
               { path: "/business/more", element: withSuspense(<MorePage />) },
             ],
           },

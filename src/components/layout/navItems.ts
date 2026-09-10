@@ -14,6 +14,7 @@ import {
   Target,
   TrendingUp,
   Truck,
+  UsersRound,
   Users,
   Wallet,
   type LucideIcon,
@@ -62,6 +63,7 @@ export const BUSINESS_NAV_ITEMS: NavItem[] = [
   { label: "Business Insights", path: "/business/insights", icon: LineChart, section: "Intelligence" },
   { label: "Planning", path: "/business/planning", icon: Target, section: "Intelligence" },
   { label: "Forecast & Guidance", path: "/business/forecast", icon: TrendingUp, section: "Intelligence" },
+  { label: "Team", path: "/business/team", icon: UsersRound, section: "" },
   { label: "Settings", path: "/settings", icon: Settings, section: "" },
 ];
 

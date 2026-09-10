@@ -12,6 +12,7 @@ import {
   Target,
   TrendingUp,
   Truck,
+  UsersRound,
   Users,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -38,6 +39,7 @@ const BUSINESS_LINKS = [
   { label: "Business Insights", to: "/business/insights", icon: LineChart },
   { label: "Planning", to: "/business/planning", icon: Target },
   { label: "Forecast & Guidance", to: "/business/forecast", icon: TrendingUp },
+  { label: "Team", to: "/business/team", icon: UsersRound },
   { label: "Settings", to: "/settings", icon: Settings },
   { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];

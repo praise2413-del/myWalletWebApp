@@ -288,6 +288,28 @@ export interface BusinessGoal {
   createdAt: string;
 }
 
+export interface TeamMember {
+  id: string;
+  userId: string;
+  businessId: string;
+  email: string;
+  role: BusinessMemberRole;
+  isOwner: boolean;
+  createdAt: string;
+}
+
+export interface ActivityLogEntry {
+  id: string;
+  businessId: string;
+  userId: string | null;
+  actorEmail: string | null;
+  action: string;
+  entityType: string;
+  entityId: string | null;
+  description: string;
+  createdAt: string;
+}
+
 /** Extend as new server-generated notification types are added (see migration). */
 export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
 
