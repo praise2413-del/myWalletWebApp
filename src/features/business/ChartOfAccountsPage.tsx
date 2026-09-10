@@ -4,8 +4,10 @@ import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useAccountBalances } from "@/features/business/hooks/useAccountBalances";
 import { useChartOfAccounts } from "@/features/business/hooks/useChartOfAccounts";
 import { useBusiness } from "@/hooks/useBusiness";
+import { formatCurrency } from "@/lib/utils/currency";
 import type { AccountType, BusinessAccount } from "@/types";
 
 const GROUPS: { type: AccountType; label: string }[] = [
@@ -16,16 +18,17 @@ const GROUPS: { type: AccountType; label: string }[] = [
   { type: "EXPENSE", label: "Expenses" },
 ];
 
-function AccountRow({ account }: { account: BusinessAccount }) {
+function AccountRow({ account, balance, currency }: { account: BusinessAccount; balance: number; currency: string }) {
   return (
     <div className="flex items-center justify-between gap-3 px-5 py-3">
       <div className="min-w-0">
         <p className="text-sm font-medium text-text-primary">{account.name}</p>
         {account.subtype && <p className="text-xs text-text-tertiary">{account.subtype}</p>}
       </div>
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-3">
         <span className="font-mono text-xs text-text-tertiary">{account.code}</span>
         {account.isDefault && <Badge>Default</Badge>}
+        <span className="w-28 text-right text-sm font-medium text-text-primary">{formatCurrency(balance, currency)}</span>
       </div>
     </div>
   );
@@ -33,7 +36,10 @@ function AccountRow({ account }: { account: BusinessAccount }) {
 
 export default function ChartOfAccountsPage() {
   const { activeBusiness } = useBusiness();
+  const currency = activeBusiness?.currency ?? "TZS";
   const { accounts, loading, error } = useChartOfAccounts();
+  const { balances } = useAccountBalances();
+  const balanceByAccountId = new Map(balances.map((b) => [b.accountId, b.balance]));
 
   return (
     <div>
@@ -71,7 +77,12 @@ export default function ChartOfAccountsPage() {
                 </CardHeader>
                 <CardContent className="divide-y divide-border p-0">
                   {groupAccounts.map((account) => (
-                    <AccountRow key={account.id} account={account} />
+                    <AccountRow
+                      key={account.id}
+                      account={account}
+                      balance={balanceByAccountId.get(account.id) ?? 0}
+                      currency={currency}
+                    />
                   ))}
                 </CardContent>
               </Card>

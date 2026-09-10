@@ -9,6 +9,8 @@ const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage"));
 const BusinessOnboardingPage = lazy(() => import("@/features/business/BusinessOnboardingPage"));
 const BusinessDashboardPage = lazy(() => import("@/features/business/BusinessDashboardPage"));
 const ChartOfAccountsPage = lazy(() => import("@/features/business/ChartOfAccountsPage"));
+const JournalEntriesPage = lazy(() => import("@/features/business/JournalEntriesPage"));
+const GeneralLedgerPage = lazy(() => import("@/features/business/GeneralLedgerPage"));
 const TransactionsPage = lazy(() => import("@/features/transactions/TransactionsPage"));
 const ReportsPage = lazy(() => import("@/features/reports/ReportsPage"));
 const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
@@ -71,6 +73,8 @@ const router = createBrowserRouter([
             children: [
               { path: "/business", element: withSuspense(<BusinessDashboardPage />) },
               { path: "/business/accounts", element: withSuspense(<ChartOfAccountsPage />) },
+              { path: "/business/journal", element: withSuspense(<JournalEntriesPage />) },
+              { path: "/business/ledger", element: withSuspense(<GeneralLedgerPage />) },
             ],
           },
         ],

@@ -220,6 +220,106 @@ export type Database = {
         }
         Relationships: []
       }
+      journal_entries: {
+        Row: {
+          business_id: string
+          created_at: string
+          created_by: string | null
+          description: string
+          entry_date: string
+          id: string
+          reference: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          entry_date: string
+          id?: string
+          reference?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          entry_date?: string
+          id?: string
+          reference?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entry_lines: {
+        Row: {
+          account_id: string
+          business_id: string
+          created_at: string
+          credit: number
+          debit: number
+          id: string
+          journal_entry_id: string
+          line_order: number
+        }
+        Insert: {
+          account_id: string
+          business_id: string
+          created_at?: string
+          credit?: number
+          debit?: number
+          id?: string
+          journal_entry_id: string
+          line_order?: number
+        }
+        Update: {
+          account_id?: string
+          business_id?: string
+          created_at?: string
+          credit?: number
+          debit?: number
+          id?: string
+          journal_entry_id?: string
+          line_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entry_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "journal_entry_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_entry_lines_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_entry_lines_journal_entry_id_fkey"
+            columns: ["journal_entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string
@@ -341,9 +441,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      account_balances: {
+        Row: {
+          account_id: string | null
+          balance: number | null
+          business_id: string | null
+          code: string | null
+          name: string | null
+          total_credit: number | null
+          total_debit: number | null
+          type: Database["public"]["Enums"]["account_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      create_journal_entry: {
+        Args: {
+          p_business_id: string
+          p_description: string
+          p_entry_date: string
+          p_lines: Json
+          p_reference: string
+        }
+        Returns: string
+      }
       delete_own_account: { Args: never; Returns: undefined }
       generate_weekly_report_notifications: { Args: never; Returns: undefined }
       is_business_member: {

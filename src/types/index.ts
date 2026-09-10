@@ -102,6 +102,47 @@ export interface BusinessAccount {
   updatedAt: string;
 }
 
+export interface JournalEntry {
+  id: string;
+  businessId: string;
+  entryDate: string;
+  description: string;
+  reference: string;
+  /** Null once the creating member's account has been deleted — the entry itself is preserved. */
+  createdBy: string | null;
+  createdAt: string;
+}
+
+export interface JournalEntryLine {
+  id: string;
+  journalEntryId: string;
+  businessId: string;
+  accountId: string;
+  account: Pick<BusinessAccount, "id" | "code" | "name" | "type">;
+  debit: number;
+  credit: number;
+  lineOrder: number;
+  createdAt: string;
+}
+
+/** A journal entry plus its lines and pre-summed total — what the Journal Entries list needs. */
+export interface JournalEntryWithLines extends JournalEntry {
+  lines: JournalEntryLine[];
+  total: number;
+}
+
+export interface AccountBalance {
+  accountId: string;
+  businessId: string;
+  code: string;
+  name: string;
+  type: AccountType;
+  totalDebit: number;
+  totalCredit: number;
+  /** Signed in the account type's normal-balance direction (debit-positive for ASSET/EXPENSE, credit-positive otherwise). */
+  balance: number;
+}
+
 /** Extend as new server-generated notification types are added (see migration). */
 export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
 

@@ -1,8 +1,12 @@
-import { ArrowRight, Banknote, BookText, TrendingUp } from "lucide-react";
+import { ArrowRight, BookOpen, BookText, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { StatCard } from "@/components/ui/StatCard";
+import { useBusinessDashboardData } from "@/features/business/hooks/useBusinessDashboardData";
 import { useBusiness } from "@/hooks/useBusiness";
 import { ACCOUNTING_BASIS_OPTIONS, BUSINESS_TYPE_OPTIONS } from "@/lib/validations/business";
 
@@ -10,24 +14,9 @@ function labelFor(options: readonly { value: string; label: string }[], value: s
   return options.find((o) => o.value === value)?.label ?? value;
 }
 
-/**
- * Deliberately separate from the shared `StatCard` (which always renders a
- * currency amount + trend badge) — these are honest "not built yet"
- * placeholders, not real figures, so they shouldn't borrow a component
- * whose contract implies a real computed number.
- */
-function ComingSoonStat({ label }: { label: string }) {
-  return (
-    <Card className="p-5">
-      <p className="text-sm font-medium text-text-secondary">{label}</p>
-      <p className="mt-2 text-2xl font-bold tracking-tight text-text-tertiary">—</p>
-      <p className="mt-2 text-xs text-text-tertiary">Coming soon</p>
-    </Card>
-  );
-}
-
 export default function BusinessDashboardPage() {
   const { activeBusiness } = useBusiness();
+  const { summary, loading, error } = useBusinessDashboardData();
 
   if (!activeBusiness) return null; // RequireBusiness redirects before this can render.
 
@@ -35,15 +24,43 @@ export default function BusinessDashboardPage() {
     <div>
       <PageHeader
         title={activeBusiness.name}
-        description="Business Dashboard"
+        description="Business Dashboard · This Month"
         actions={<Badge tone="primary">{labelFor(BUSINESS_TYPE_OPTIONS, activeBusiness.businessType)}</Badge>}
       />
 
+      {error && (
+        <div className="mb-4">
+          <AlertBanner message={error} />
+        </div>
+      )}
+
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <ComingSoonStat label="Revenue" />
-        <ComingSoonStat label="Expenses" />
-        <ComingSoonStat label="Net Profit" />
-        <ComingSoonStat label="Cash Position" />
+        {loading ? (
+          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)
+        ) : (
+          <>
+            <StatCard label="Revenue" amount={summary.revenue} currency={activeBusiness.currency} changePercent={summary.deltas.revenue} />
+            <StatCard
+              label="Expenses"
+              amount={summary.expenses}
+              currency={activeBusiness.currency}
+              changePercent={summary.deltas.expenses}
+              increaseIsGood={false}
+            />
+            <StatCard
+              label="Net Profit"
+              amount={summary.netProfit}
+              currency={activeBusiness.currency}
+              changePercent={summary.deltas.netProfit}
+            />
+            <StatCard
+              label="Cash Position"
+              amount={summary.cashPosition}
+              currency={activeBusiness.currency}
+              changePercent={summary.deltas.cashPosition}
+            />
+          </>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -73,27 +90,32 @@ export default function BusinessDashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-text-secondary">
-              Your starter chart of accounts is ready. Recording sales, purchases, and expenses — plus
-              full financial statements — is coming in the next phase of Business Finance.
+              Record double-entry transactions in the Journal, then trace any account's full history in
+              the General Ledger. Financial statements are coming in the next phase.
             </p>
+            <Link
+              to="/business/journal"
+              className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
+            >
+              <span className="flex items-center gap-2">
+                <BookOpen className="size-4 text-text-secondary" aria-hidden="true" />
+                Journal Entries
+              </span>
+              <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
+            </Link>
             <Link
               to="/business/accounts"
               className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
             >
               <span className="flex items-center gap-2">
                 <BookText className="size-4 text-text-secondary" aria-hidden="true" />
-                View Chart of Accounts
+                Chart of Accounts
               </span>
               <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
             </Link>
             <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-3 text-xs text-text-tertiary">
               <TrendingUp className="size-4 shrink-0" aria-hidden="true" />
-              Revenue, expenses, receivables, payables, and reports unlock once transactions can be
-              recorded.
-            </div>
-            <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-3 text-xs text-text-tertiary">
-              <Banknote className="size-4 shrink-0" aria-hidden="true" />
-              This is an early, foundation-only release of Business Finance — more is on the way.
+              Sales, purchases, customers, suppliers, and financial statements unlock in later phases.
             </div>
           </CardContent>
         </Card>
