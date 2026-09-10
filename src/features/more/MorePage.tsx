@@ -9,6 +9,7 @@ import {
   Package,
   Settings,
   Tags,
+  Target,
   Truck,
   Users,
 } from "lucide-react";
@@ -34,6 +35,7 @@ const BUSINESS_LINKS = [
   { label: "General Ledger", to: "/business/ledger", icon: BarChart3 },
   { label: "Financial Statements", to: "/business/statements", icon: FileBarChart },
   { label: "Business Insights", to: "/business/insights", icon: LineChart },
+  { label: "Planning", to: "/business/planning", icon: Target },
   { label: "Settings", to: "/settings", icon: Settings },
   { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];

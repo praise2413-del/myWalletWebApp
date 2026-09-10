@@ -263,6 +263,31 @@ export interface Purchase {
   amountPaid: number;
 }
 
+export interface Budget {
+  id: string;
+  businessId: string;
+  accountId: string;
+  accountCode: string;
+  accountName: string;
+  month: number;
+  year: number;
+  amount: number;
+}
+
+export type GoalType = "REVENUE" | "NET_PROFIT" | "CASH_RESERVE";
+
+export interface BusinessGoal {
+  id: string;
+  businessId: string;
+  name: string;
+  goalType: GoalType;
+  targetAmount: number;
+  startDate: string;
+  targetDate: string | null;
+  notes: string;
+  createdAt: string;
+}
+
 /** Extend as new server-generated notification types are added (see migration). */
 export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
 

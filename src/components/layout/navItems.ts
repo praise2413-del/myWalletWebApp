@@ -11,6 +11,7 @@ import {
   Receipt,
   Settings,
   Tags,
+  Target,
   Truck,
   Users,
   Wallet,
@@ -58,6 +59,7 @@ export const BUSINESS_NAV_ITEMS: NavItem[] = [
   { label: "General Ledger", path: "/business/ledger", icon: BarChart3, section: "Accounting" },
   { label: "Financial Statements", path: "/business/statements", icon: FileBarChart, section: "Accounting" },
   { label: "Business Insights", path: "/business/insights", icon: LineChart, section: "Intelligence" },
+  { label: "Planning", path: "/business/planning", icon: Target, section: "Intelligence" },
   { label: "Settings", path: "/settings", icon: Settings, section: "" },
 ];
 

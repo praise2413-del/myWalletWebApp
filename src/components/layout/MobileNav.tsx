@@ -15,8 +15,12 @@ export function MobileNav() {
         {BUSINESS_MOBILE_NAV_ITEMS.map((item) => (
           <MobileNavLink key={item.path} item={item} />
         ))}
+        {/* /business/more, not the shared /more — MorePage decides which
+            link set to show from the URL prefix alone, and /more itself
+            doesn't start with /business, so linking there from a business
+            page would silently fall back to the Personal link set. */}
         <NavLink
-          to="/more"
+          to="/business/more"
           className={({ isActive }) =>
             cn(
               "flex flex-1 flex-col items-center gap-1 py-1.5 text-[11px] font-medium",

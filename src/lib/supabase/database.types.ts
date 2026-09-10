@@ -116,6 +116,108 @@ export type Database = {
         }
         Relationships: []
       }
+      budgets: {
+        Row: {
+          account_id: string
+          amount: number
+          business_id: string
+          created_at: string
+          id: string
+          month: number
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          business_id: string
+          created_at?: string
+          id?: string
+          month: number
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          business_id?: string
+          created_at?: string
+          id?: string
+          month?: number
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budgets_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "budgets_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budgets_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_goals: {
+        Row: {
+          business_id: string
+          created_at: string
+          goal_type: Database["public"]["Enums"]["goal_type"]
+          id: string
+          name: string
+          notes: string
+          start_date: string
+          target_amount: number
+          target_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          goal_type: Database["public"]["Enums"]["goal_type"]
+          id?: string
+          name: string
+          notes?: string
+          start_date: string
+          target_amount: number
+          target_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          goal_type?: Database["public"]["Enums"]["goal_type"]
+          id?: string
+          name?: string
+          notes?: string
+          start_date?: string
+          target_amount?: number
+          target_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_goals_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_members: {
         Row: {
           business_id: string
@@ -1120,6 +1222,7 @@ export type Database = {
         | "SERVICES"
         | "MANUFACTURING"
         | "OTHER"
+      goal_type: "REVENUE" | "NET_PROFIT" | "CASH_RESERVE"
       notification_type: "WEEKLY_REPORT" | "PASSWORD_RESET"
       transaction_type: "INCOME" | "EXPENSE"
     }
@@ -1272,6 +1375,7 @@ export const Constants = {
         "MANUFACTURING",
         "OTHER",
       ],
+      goal_type: ["REVENUE", "NET_PROFIT", "CASH_RESERVE"],
       notification_type: ["WEEKLY_REPORT", "PASSWORD_RESET"],
       transaction_type: ["INCOME", "EXPENSE"],
     },

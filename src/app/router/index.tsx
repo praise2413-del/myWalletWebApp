@@ -18,6 +18,7 @@ const ProductsPage = lazy(() => import("@/features/business/ProductsPage"));
 const SalesPage = lazy(() => import("@/features/business/SalesPage"));
 const PurchasesPage = lazy(() => import("@/features/business/PurchasesPage"));
 const BusinessInsightsPage = lazy(() => import("@/features/business/BusinessInsightsPage"));
+const BusinessPlanningPage = lazy(() => import("@/features/business/BusinessPlanningPage"));
 const TransactionsPage = lazy(() => import("@/features/transactions/TransactionsPage"));
 const ReportsPage = lazy(() => import("@/features/reports/ReportsPage"));
 const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
@@ -89,6 +90,8 @@ const router = createBrowserRouter([
               { path: "/business/sales", element: withSuspense(<SalesPage />) },
               { path: "/business/purchases", element: withSuspense(<PurchasesPage />) },
               { path: "/business/insights", element: withSuspense(<BusinessInsightsPage />) },
+              { path: "/business/planning", element: withSuspense(<BusinessPlanningPage />) },
+              { path: "/business/more", element: withSuspense(<MorePage />) },
             ],
           },
         ],
