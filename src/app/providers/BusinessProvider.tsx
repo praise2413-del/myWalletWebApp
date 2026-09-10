@@ -137,6 +137,32 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
     [user, switchBusiness],
   );
 
+  const deleteBusiness = useCallback(
+    async (businessId: string) => {
+      const { error: deleteError } = await supabase.from("businesses").delete().eq("id", businessId);
+      if (deleteError) {
+        return { error: "We couldn't delete this business. Please try again." };
+      }
+
+      const remaining = businesses.filter((b) => b.id !== businessId);
+      setBusinesses(remaining);
+
+      if (activeBusinessId === businessId) {
+        const next = remaining[0]?.id ?? null;
+        setActiveBusinessId(next);
+        if (user) {
+          try {
+            if (next) window.localStorage.setItem(activeBusinessStorageKey(user.id), next);
+            else window.localStorage.removeItem(activeBusinessStorageKey(user.id));
+          } catch {
+            // Best-effort only.
+          }
+        }
+      }
+    },
+    [businesses, activeBusinessId, user],
+  );
+
   const refreshBusinesses = useCallback(async () => {
     if (user) await loadBusinesses(user.id);
   }, [user, loadBusinesses]);
@@ -145,7 +171,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <BusinessContext.Provider
-      value={{ businesses, activeBusiness, loading, error, switchBusiness, createBusiness, refreshBusinesses }}
+      value={{ businesses, activeBusiness, loading, error, switchBusiness, createBusiness, deleteBusiness, refreshBusinesses }}
     >
       {children}
     </BusinessContext.Provider>

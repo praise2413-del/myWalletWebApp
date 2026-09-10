@@ -40,7 +40,7 @@ const BUSINESS_LINKS = [
   { label: "Planning", to: "/business/planning", icon: Target },
   { label: "Forecast & Guidance", to: "/business/forecast", icon: TrendingUp },
   { label: "Team", to: "/business/team", icon: UsersRound },
-  { label: "Settings", to: "/settings", icon: Settings },
+  { label: "Settings", to: "/business/settings", icon: Settings },
   { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];
 

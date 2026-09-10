@@ -64,7 +64,7 @@ export const BUSINESS_NAV_ITEMS: NavItem[] = [
   { label: "Planning", path: "/business/planning", icon: Target, section: "Intelligence" },
   { label: "Forecast & Guidance", path: "/business/forecast", icon: TrendingUp, section: "Intelligence" },
   { label: "Team", path: "/business/team", icon: UsersRound, section: "" },
-  { label: "Settings", path: "/settings", icon: Settings, section: "" },
+  { label: "Settings", path: "/business/settings", icon: Settings, section: "" },
 ];
 
 // The mobile bottom bar stays capped at 4 icons + More (same convention

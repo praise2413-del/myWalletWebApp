@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Briefcase } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AlertBanner } from "@/components/ui/AlertBanner";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -18,8 +18,15 @@ import {
 
 export default function BusinessOnboardingPage() {
   const navigate = useNavigate();
-  const { activeBusiness, loading, createBusiness } = useBusiness();
+  const [searchParams] = useSearchParams();
+  const { businesses, createBusiness } = useBusiness();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Reached two ways: RequireBusiness redirects here automatically when a
+  // user has no business at all (first-time setup), or the business
+  // picker links here explicitly with ?add=1 to create an *additional*
+  // one — never auto-redirect away from the second case just because a
+  // business already exists.
+  const isAddingAnother = searchParams.get("add") === "1" || businesses.length > 0;
 
   const {
     register,
@@ -42,13 +49,8 @@ export default function BusinessOnboardingPage() {
   const businessType = watch("businessType");
 
   useEffect(() => {
-    document.title = "Set up Business — myWallet";
-  }, []);
-
-  // A business already exists — don't re-run onboarding, go straight in.
-  if (!loading && activeBusiness) {
-    return <Navigate to="/business" replace />;
-  }
+    document.title = isAddingAnother ? "Add Business — myWallet" : "Set up Business — myWallet";
+  }, [isAddingAnother]);
 
   return (
     <div className="mx-auto max-w-xl py-6">
@@ -56,10 +58,13 @@ export default function BusinessOnboardingPage() {
         <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-primary-50 dark:bg-primary-500/15">
           <Briefcase className="size-6 text-primary-600 dark:text-primary-500" aria-hidden="true" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-text-primary">Welcome to myWallet Business</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-text-primary">
+          {isAddingAnother ? "Add a New Business" : "Welcome to myWallet Business"}
+        </h1>
         <p className="mt-1.5 text-sm text-text-secondary">
-          Tell us a bit about your business. You don't need any accounting knowledge to get started —
-          we'll set up a starter chart of accounts for you automatically.
+          {isAddingAnother
+            ? "Set up another business — it gets its own chart of accounts, journal, and reports, completely separate from your other businesses."
+            : "Tell us a bit about your business. You don't need any accounting knowledge to get started — we'll set up a starter chart of accounts for you automatically."}
         </p>
       </div>
 

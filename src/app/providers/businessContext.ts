@@ -9,6 +9,7 @@ export interface BusinessContextValue {
   error: string | null;
   switchBusiness: (businessId: string) => void;
   createBusiness: (input: BusinessOnboardingInput) => Promise<{ error?: string; business?: Business }>;
+  deleteBusiness: (businessId: string) => Promise<{ error?: string } | void>;
   refreshBusinesses: () => Promise<void>;
 }
 
