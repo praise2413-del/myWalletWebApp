@@ -1,8 +1,9 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Logo } from "@/components/layout/Logo";
-import { NAV_ITEMS } from "@/components/layout/navItems";
+import { BUSINESS_NAV_ITEMS, NAV_ITEMS } from "@/components/layout/navItems";
+import { WorkspaceSwitcher } from "@/components/layout/WorkspaceSwitcher";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { cn } from "@/lib/utils/cn";
 
@@ -14,6 +15,8 @@ interface MobileDrawerProps {
 export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   useFocusTrap(open, containerRef);
+  const isBusiness = useLocation().pathname.startsWith("/business");
+  const items = isBusiness ? BUSINESS_NAV_ITEMS : NAV_ITEMS;
 
   useEffect(() => {
     if (!open) return;
@@ -65,8 +68,11 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
             <X className="size-5" aria-hidden="true" />
           </button>
         </div>
+        <div className="px-3 pt-3">
+          <WorkspaceSwitcher isBusiness={isBusiness} onNavigate={onClose} />
+        </div>
         <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label="Main navigation">
-          {NAV_ITEMS.map((item) => (
+          {items.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}

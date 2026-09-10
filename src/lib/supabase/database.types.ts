@@ -39,6 +39,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          business_id: string
+          code: string
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          subtype: string
+          type: Database["public"]["Enums"]["account_type"]
+          updated_at: string
+        }
+        Insert: {
+          business_id: string
+          code: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          subtype?: string
+          type: Database["public"]["Enums"]["account_type"]
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string
+          code?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          subtype?: string
+          type?: Database["public"]["Enums"]["account_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       allocations: {
         Row: {
           allocation_date: string
@@ -69,6 +113,77 @@ export type Database = {
           type?: Database["public"]["Enums"]["allocation_type"]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      business_members: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["business_member_role"]
+          user_id: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["business_member_role"]
+          user_id: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["business_member_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_members_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      businesses: {
+        Row: {
+          accounting_basis: Database["public"]["Enums"]["accounting_basis"]
+          business_type: Database["public"]["Enums"]["business_type"]
+          created_at: string
+          currency: string
+          financial_year_start_month: number
+          id: string
+          industry: string
+          name: string
+          owner_id: string
+          updated_at: string
+        }
+        Insert: {
+          accounting_basis?: Database["public"]["Enums"]["accounting_basis"]
+          business_type?: Database["public"]["Enums"]["business_type"]
+          created_at?: string
+          currency?: string
+          financial_year_start_month?: number
+          id?: string
+          industry?: string
+          name: string
+          owner_id: string
+          updated_at?: string
+        }
+        Update: {
+          accounting_basis?: Database["public"]["Enums"]["accounting_basis"]
+          business_type?: Database["public"]["Enums"]["business_type"]
+          created_at?: string
+          currency?: string
+          financial_year_start_month?: number
+          id?: string
+          industry?: string
+          name?: string
+          owner_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -231,9 +346,34 @@ export type Database = {
     Functions: {
       delete_own_account: { Args: never; Returns: undefined }
       generate_weekly_report_notifications: { Args: never; Returns: undefined }
+      is_business_member: {
+        Args: { target_business_id: string }
+        Returns: boolean
+      }
+      seed_starter_chart_of_accounts: {
+        Args: { target_business_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
+      account_type: "ASSET" | "LIABILITY" | "EQUITY" | "REVENUE" | "EXPENSE"
+      accounting_basis: "CASH" | "ACCRUAL"
       allocation_type: "SAVING" | "INVESTMENT"
+      business_member_role:
+        | "OWNER"
+        | "ACCOUNTANT"
+        | "MANAGER"
+        | "SALES"
+        | "CASHIER"
+      business_type:
+        | "RETAIL"
+        | "RESTAURANT"
+        | "CONSULTING"
+        | "FREELANCER"
+        | "CONSTRUCTION"
+        | "SERVICES"
+        | "MANUFACTURING"
+        | "OTHER"
       notification_type: "WEEKLY_REPORT" | "PASSWORD_RESET"
       transaction_type: "INCOME" | "EXPENSE"
     }
@@ -366,7 +506,26 @@ export const Constants = {
   },
   public: {
     Enums: {
+      account_type: ["ASSET", "LIABILITY", "EQUITY", "REVENUE", "EXPENSE"],
+      accounting_basis: ["CASH", "ACCRUAL"],
       allocation_type: ["SAVING", "INVESTMENT"],
+      business_member_role: [
+        "OWNER",
+        "ACCOUNTANT",
+        "MANAGER",
+        "SALES",
+        "CASHIER",
+      ],
+      business_type: [
+        "RETAIL",
+        "RESTAURANT",
+        "CONSULTING",
+        "FREELANCER",
+        "CONSTRUCTION",
+        "SERVICES",
+        "MANUFACTURING",
+        "OTHER",
+      ],
       notification_type: ["WEEKLY_REPORT", "PASSWORD_RESET"],
       transaction_type: ["INCOME", "EXPENSE"],
     },

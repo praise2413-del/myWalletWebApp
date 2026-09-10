@@ -60,6 +60,48 @@ export interface Insight {
   comparison?: string;
 }
 
+export type BusinessType =
+  | "RETAIL"
+  | "RESTAURANT"
+  | "CONSULTING"
+  | "FREELANCER"
+  | "CONSTRUCTION"
+  | "SERVICES"
+  | "MANUFACTURING"
+  | "OTHER";
+
+export type AccountingBasis = "CASH" | "ACCRUAL";
+
+export interface Business {
+  id: string;
+  ownerId: string;
+  name: string;
+  businessType: BusinessType;
+  industry: string;
+  currency: string;
+  /** 1 = January ... 12 = December. */
+  financialYearStartMonth: number;
+  accountingBasis: AccountingBasis;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type BusinessMemberRole = "OWNER" | "ACCOUNTANT" | "MANAGER" | "SALES" | "CASHIER";
+
+export type AccountType = "ASSET" | "LIABILITY" | "EQUITY" | "REVENUE" | "EXPENSE";
+
+export interface BusinessAccount {
+  id: string;
+  businessId: string;
+  code: string;
+  name: string;
+  type: AccountType;
+  subtype: string;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 /** Extend as new server-generated notification types are added (see migration). */
 export type NotificationType = "WEEKLY_REPORT" | "PASSWORD_RESET";
 

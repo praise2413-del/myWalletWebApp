@@ -3,8 +3,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { RequireAuth, RequireGuest } from "@/app/router/RequireAuth";
+import { RequireBusiness } from "@/app/router/RequireBusiness";
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage"));
+const BusinessOnboardingPage = lazy(() => import("@/features/business/BusinessOnboardingPage"));
+const BusinessDashboardPage = lazy(() => import("@/features/business/BusinessDashboardPage"));
+const ChartOfAccountsPage = lazy(() => import("@/features/business/ChartOfAccountsPage"));
 const TransactionsPage = lazy(() => import("@/features/transactions/TransactionsPage"));
 const ReportsPage = lazy(() => import("@/features/reports/ReportsPage"));
 const InsightsPage = lazy(() => import("@/features/insights/InsightsPage"));
@@ -61,6 +65,14 @@ const router = createBrowserRouter([
           { path: "/more", element: withSuspense(<MorePage />) },
           { path: "/notifications", element: withSuspense(<NotificationsPage />) },
           { path: "/notifications/:id", element: withSuspense(<NotificationDetailPage />) },
+          { path: "/business/onboarding", element: withSuspense(<BusinessOnboardingPage />) },
+          {
+            element: <RequireBusiness />,
+            children: [
+              { path: "/business", element: withSuspense(<BusinessDashboardPage />) },
+              { path: "/business/accounts", element: withSuspense(<ChartOfAccountsPage />) },
+            ],
+          },
         ],
       },
     ],
