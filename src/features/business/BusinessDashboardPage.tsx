@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, BookText, TrendingUp } from "lucide-react";
+import { ArrowRight, BookOpen, BookText, FileBarChart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AlertBanner } from "@/components/ui/AlertBanner";
@@ -90,8 +90,9 @@ export default function BusinessDashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-text-secondary">
-              Record double-entry transactions in the Journal, then trace any account's full history in
-              the General Ledger. Financial statements are coming in the next phase.
+              Record double-entry transactions in the Journal, trace any account's full history in the
+              General Ledger, and read your Trial Balance, Income Statement, Balance Sheet, and Cash
+              Flow in Financial Statements.
             </p>
             <Link
               to="/business/journal"
@@ -100,6 +101,16 @@ export default function BusinessDashboardPage() {
               <span className="flex items-center gap-2">
                 <BookOpen className="size-4 text-text-secondary" aria-hidden="true" />
                 Journal Entries
+              </span>
+              <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
+            </Link>
+            <Link
+              to="/business/statements"
+              className="flex items-center justify-between rounded-lg border border-border-strong px-4 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-background"
+            >
+              <span className="flex items-center gap-2">
+                <FileBarChart className="size-4 text-text-secondary" aria-hidden="true" />
+                Financial Statements
               </span>
               <ArrowRight className="size-4 text-text-tertiary" aria-hidden="true" />
             </Link>
@@ -115,7 +126,7 @@ export default function BusinessDashboardPage() {
             </Link>
             <div className="flex items-center gap-2 rounded-lg bg-background px-4 py-3 text-xs text-text-tertiary">
               <TrendingUp className="size-4 shrink-0" aria-hidden="true" />
-              Sales, purchases, customers, suppliers, and financial statements unlock in later phases.
+              Sales, purchases, customers, suppliers, and richer reporting unlock in later phases.
             </div>
           </CardContent>
         </Card>

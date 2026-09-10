@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CASH_ACCOUNT_CODES } from "@/features/business/lib/statements";
 import { useBusiness } from "@/hooks/useBusiness";
 import { supabase } from "@/lib/supabase/client";
 import { getPeriodRange, percentChange, toDateKey } from "@/lib/utils/period";
@@ -19,9 +20,6 @@ const EMPTY_SUMMARY: BusinessDashboardSummary = {
   cashPosition: 0,
   deltas: { revenue: 0, expenses: 0, netProfit: 0, cashPosition: 0 },
 };
-
-/** The starter chart of accounts' cash-like accounts (Chart of Accounts is read-only so far — revisit once custom accounts can be created). */
-const CASH_ACCOUNT_CODES = ["1000", "1010"];
 
 interface LineRow {
   debit: number;
