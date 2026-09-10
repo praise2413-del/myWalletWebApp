@@ -1,11 +1,14 @@
+import { FileDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AlertBanner } from "@/components/ui/AlertBanner";
+import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { BalanceSheetView } from "@/features/business/components/statements/BalanceSheetView";
 import { CashFlowStatementView } from "@/features/business/components/statements/CashFlowStatementView";
 import { IncomeStatementView } from "@/features/business/components/statements/IncomeStatementView";
 import { TrialBalanceView } from "@/features/business/components/statements/TrialBalanceView";
+import { BusinessReportPreviewOverlay } from "@/features/business/components/reports/BusinessReportPreviewOverlay";
 import { useBusinessLedgerLines } from "@/features/business/hooks/useBusinessLedgerLines";
 import {
   buildBalanceSheet,
@@ -37,6 +40,7 @@ export default function BusinessStatementsPage() {
 
   const [tab, setTab] = useState<StatementTab>("INCOME_STATEMENT");
   const [asOfDate, setAsOfDate] = useState(today());
+  const [reportOpen, setReportOpen] = useState(false);
 
   const thisMonth = useMemo(() => getPeriodRange("This Month"), []);
   const [dateFrom, setDateFrom] = useState(toDateKey(thisMonth.start));
@@ -51,7 +55,19 @@ export default function BusinessStatementsPage() {
 
   return (
     <div>
-      <PageHeader title="Financial Statements" description="Trial Balance, Income Statement, Balance Sheet, and Cash Flow — always derived live from your journal." />
+      <PageHeader
+        title="Financial Statements"
+        description="Trial Balance, Income Statement, Balance Sheet, and Cash Flow — always derived live from your journal."
+        actions={
+          !loading &&
+          activeBusiness && (
+            <Button variant="outline" onClick={() => setReportOpen(true)}>
+              <FileDown className="size-4" aria-hidden="true" />
+              Generate Report
+            </Button>
+          )
+        }
+      />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="inline-flex flex-wrap gap-1 rounded-lg border border-border bg-surface p-1">
@@ -119,6 +135,16 @@ export default function BusinessStatementsPage() {
           {tab === "BALANCE_SHEET" && <BalanceSheetView balanceSheet={balanceSheet} currency={currency} />}
           {tab === "CASH_FLOW" && <CashFlowStatementView statement={cashFlow} currency={currency} />}
         </>
+      )}
+
+      {reportOpen && activeBusiness && (
+        <BusinessReportPreviewOverlay
+          onClose={() => setReportOpen(false)}
+          business={activeBusiness}
+          lines={lines}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+        />
       )}
     </div>
   );
