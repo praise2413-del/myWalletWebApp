@@ -6,6 +6,7 @@ import {
   FileText,
   LayoutDashboard,
   Lightbulb,
+  LineChart,
   Package,
   Receipt,
   Settings,
@@ -56,6 +57,7 @@ export const BUSINESS_NAV_ITEMS: NavItem[] = [
   { label: "Chart of Accounts", path: "/business/accounts", icon: BookText, section: "Accounting" },
   { label: "General Ledger", path: "/business/ledger", icon: BarChart3, section: "Accounting" },
   { label: "Financial Statements", path: "/business/statements", icon: FileBarChart, section: "Accounting" },
+  { label: "Business Insights", path: "/business/insights", icon: LineChart, section: "Intelligence" },
   { label: "Settings", path: "/settings", icon: Settings, section: "" },
 ];
 

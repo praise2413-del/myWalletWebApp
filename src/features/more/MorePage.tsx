@@ -4,6 +4,7 @@ import {
   ChevronRight,
   FileBarChart,
   HelpCircle,
+  LineChart,
   LogOut,
   Package,
   Settings,
@@ -32,6 +33,7 @@ const BUSINESS_LINKS = [
   { label: "Chart of Accounts", to: "/business/accounts", icon: BookText },
   { label: "General Ledger", to: "/business/ledger", icon: BarChart3 },
   { label: "Financial Statements", to: "/business/statements", icon: FileBarChart },
+  { label: "Business Insights", to: "/business/insights", icon: LineChart },
   { label: "Settings", to: "/settings", icon: Settings },
   { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];
