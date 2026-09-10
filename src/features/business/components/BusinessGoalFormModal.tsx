@@ -5,6 +5,7 @@ import { AlertBanner } from "@/components/ui/AlertBanner";
 import { Button } from "@/components/ui/Button";
 import { SlideOver } from "@/components/ui/SlideOver";
 import { Field, inputClass } from "@/features/business/components/formFields";
+import { todayDateKey } from "@/lib/utils/period";
 import { type BusinessGoalFormInput, businessGoalFormSchema, GOAL_TYPE_OPTIONS } from "@/lib/validations/businessGoal";
 import type { BusinessGoal } from "@/types";
 
@@ -16,9 +17,7 @@ interface BusinessGoalFormModalProps {
   onSubmit: (values: BusinessGoalFormInput) => Promise<{ error?: string } | void>;
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 const EMPTY: BusinessGoalFormInput = { name: "", goalType: "REVENUE", targetAmount: 0, startDate: today(), targetDate: "", notes: "" };
 

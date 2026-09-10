@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { SlideOver } from "@/components/ui/SlideOver";
 import { formatCurrency } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils/cn";
+import { todayDateKey } from "@/lib/utils/period";
 import { type JournalEntryFormInput, journalEntryFormSchema } from "@/lib/validations/journalEntry";
 import type { BusinessAccount } from "@/types";
 
@@ -18,9 +19,7 @@ interface JournalEntryFormModalProps {
   onSubmit: (values: JournalEntryFormInput) => Promise<{ error?: string } | void>;
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 const EMPTY_LINE = { accountId: "", debit: 0, credit: 0 };
 

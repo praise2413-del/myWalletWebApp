@@ -15,12 +15,11 @@ import { useToastStore } from "@/hooks/useToastStore";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
 import { formatCurrency } from "@/lib/utils/currency";
+import { todayDateKey } from "@/lib/utils/period";
 import { GOAL_TYPE_OPTIONS, type BusinessGoalFormInput } from "@/lib/validations/businessGoal";
 import type { BusinessGoal } from "@/types";
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 function typeLabel(goalType: BusinessGoal["goalType"]): string {
   return GOAL_TYPE_OPTIONS.find((o) => o.value === goalType)?.label ?? goalType;

@@ -123,6 +123,18 @@ export function toDateKey(date: Date): string {
   return format(date, "yyyy-MM-dd");
 }
 
+/**
+ * Today's date as a 'YYYY-MM-DD' key, safe in any timezone. Prefer this
+ * over `new Date().toISOString().slice(0, 10)` — `toISOString()` reports
+ * the UTC date, which rolls back a day for part of the day in any
+ * timezone ahead of UTC (e.g. `Africa/Dar_es_Salaam`, UTC+3 — confirmed
+ * this app's actual deployment/dev timezone): local 1am is still "today"
+ * for the user, but already UTC-yesterday.
+ */
+export function todayDateKey(): string {
+  return toDateKey(new Date());
+}
+
 export function percentChange(current: number, previous: number): number {
   if (previous === 0) return current === 0 ? 0 : 100;
   return ((current - previous) / Math.abs(previous)) * 100;

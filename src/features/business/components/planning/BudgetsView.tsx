@@ -15,6 +15,7 @@ import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
 import { formatCurrency } from "@/lib/utils/currency";
 import { friendlyDbError } from "@/lib/utils/dbErrors";
+import { toDateKey } from "@/lib/utils/period";
 import type { BudgetFormInput } from "@/lib/validations/budget";
 import type { Budget } from "@/types";
 
@@ -24,7 +25,7 @@ function monthLabel(month: number, year: number): string {
 
 function actualFor(lines: RawLedgerLine[], accountId: string, month: number, year: number): number {
   const from = `${year}-${String(month).padStart(2, "0")}-01`;
-  const to = new Date(year, month, 0).toISOString().slice(0, 10); // last day of month
+  const to = toDateKey(new Date(year, month, 0)); // last day of month, timezone-safe
   return lines
     .filter((l) => l.accountId === accountId && l.entryDate >= from && l.entryDate <= to)
     .reduce((sum, l) => sum + l.debit - l.credit, 0);

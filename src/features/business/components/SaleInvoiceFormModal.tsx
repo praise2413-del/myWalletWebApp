@@ -8,6 +8,7 @@ import { SlideOver } from "@/components/ui/SlideOver";
 import { Field, inputClass } from "@/features/business/components/formFields";
 import { formatCurrency } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils/cn";
+import { todayDateKey } from "@/lib/utils/period";
 import { type SaleInvoiceFormInput, saleInvoiceFormSchema } from "@/lib/validations/saleInvoice";
 import type { Customer, Product } from "@/types";
 
@@ -20,9 +21,7 @@ interface SaleInvoiceFormModalProps {
   onSubmit: (values: SaleInvoiceFormInput) => Promise<{ error?: string } | void>;
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 const EMPTY_LINE = { productId: "", quantity: 1, unitPrice: 0 };
 

@@ -7,6 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Field, inputClass } from "@/features/business/components/formFields";
 import { CASH_ACCOUNT_CODES } from "@/features/business/lib/statements";
 import { formatCurrency } from "@/lib/utils/currency";
+import { todayDateKey } from "@/lib/utils/period";
 import { type PaymentFormInput, paymentFormSchema } from "@/lib/validations/saleInvoice";
 import type { BusinessAccount } from "@/types";
 
@@ -20,9 +21,7 @@ interface PaymentFormModalProps {
   onSubmit: (values: PaymentFormInput) => Promise<{ error?: string } | void>;
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 export function PaymentFormModal({ open, onClose, title, remainingBalance, currency, accounts, onSubmit }: PaymentFormModalProps) {
   const cashAccounts = accounts.filter((a) => CASH_ACCOUNT_CODES.includes(a.code));

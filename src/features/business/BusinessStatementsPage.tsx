@@ -17,7 +17,7 @@ import {
   buildTrialBalance,
 } from "@/features/business/lib/statements";
 import { useBusiness } from "@/hooks/useBusiness";
-import { getPeriodRange, toDateKey } from "@/lib/utils/period";
+import { getPeriodRange, toDateKey, todayDateKey } from "@/lib/utils/period";
 import { cn } from "@/lib/utils/cn";
 
 type StatementTab = "TRIAL_BALANCE" | "INCOME_STATEMENT" | "BALANCE_SHEET" | "CASH_FLOW";
@@ -29,9 +29,7 @@ const TABS: { id: StatementTab; label: string }[] = [
   { id: "CASH_FLOW", label: "Cash Flow" },
 ];
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const today = todayDateKey;
 
 export default function BusinessStatementsPage() {
   const { activeBusiness } = useBusiness();

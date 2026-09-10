@@ -10,6 +10,7 @@ import {
   Settings,
   Tags,
   Target,
+  TrendingUp,
   Truck,
   Users,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const BUSINESS_LINKS = [
   { label: "Financial Statements", to: "/business/statements", icon: FileBarChart },
   { label: "Business Insights", to: "/business/insights", icon: LineChart },
   { label: "Planning", to: "/business/planning", icon: Target },
+  { label: "Forecast & Guidance", to: "/business/forecast", icon: TrendingUp },
   { label: "Settings", to: "/settings", icon: Settings },
   { label: "Help & Support", to: "mailto:praise2413@gmail.com", icon: HelpCircle },
 ];
