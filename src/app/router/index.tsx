@@ -1,9 +1,10 @@
 import { lazy, Suspense } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { RequireAuth, RequireGuest } from "@/app/router/RequireAuth";
 import { RequireBusiness } from "@/app/router/RequireBusiness";
+import { RouteErrorBoundary } from "@/app/router/RouteErrorBoundary";
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage"));
 const BusinessOnboardingPage = lazy(() => import("@/features/business/BusinessOnboardingPage"));
@@ -52,50 +53,61 @@ function withSuspense(element: React.ReactNode) {
 
 const router = createBrowserRouter([
   {
-    element: <RequireGuest />,
-    children: [
-      { path: "/login", element: withSuspense(<LoginPage />) },
-      { path: "/register", element: withSuspense(<RegisterPage />) },
-      { path: "/forgot-password", element: withSuspense(<ForgotPasswordPage />) },
-    ],
-  },
-  { path: "/reset-password", element: withSuspense(<ResetPasswordPage />) },
-  { path: "/terms", element: withSuspense(<TermsPage />) },
-  { path: "/privacy", element: withSuspense(<PrivacyPage />) },
-  {
-    element: <RequireAuth />,
+    // Pathless root layout so one errorElement covers every route below —
+    // React Router positions a real error boundary around each route's
+    // output, so this also catches a lazy()-loaded chunk failing to
+    // fetch (e.g. a stale deploy) even though these routes use plain
+    // React.lazy()/Suspense rather than React Router's own lazy loader.
+    element: <Outlet />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
-        element: <AppShell />,
+        element: <RequireGuest />,
         children: [
-          { path: "/", element: withSuspense(<DashboardPage />) },
-          { path: "/transactions", element: withSuspense(<TransactionsPage />) },
-          { path: "/reports", element: withSuspense(<ReportsPage />) },
-          { path: "/insights", element: withSuspense(<InsightsPage />) },
-          { path: "/categories", element: withSuspense(<CategoriesPage />) },
-          { path: "/settings", element: withSuspense(<SettingsPage />) },
-          { path: "/more", element: withSuspense(<MorePage />) },
-          { path: "/notifications", element: withSuspense(<NotificationsPage />) },
-          { path: "/notifications/:id", element: withSuspense(<NotificationDetailPage />) },
-          { path: "/business/onboarding", element: withSuspense(<BusinessOnboardingPage />) },
+          { path: "/login", element: withSuspense(<LoginPage />) },
+          { path: "/register", element: withSuspense(<RegisterPage />) },
+          { path: "/forgot-password", element: withSuspense(<ForgotPasswordPage />) },
+        ],
+      },
+      { path: "/reset-password", element: withSuspense(<ResetPasswordPage />) },
+      { path: "/terms", element: withSuspense(<TermsPage />) },
+      { path: "/privacy", element: withSuspense(<PrivacyPage />) },
+      {
+        element: <RequireAuth />,
+        children: [
           {
-            element: <RequireBusiness />,
+            element: <AppShell />,
             children: [
-              { path: "/business", element: withSuspense(<BusinessDashboardPage />) },
-              { path: "/business/accounts", element: withSuspense(<ChartOfAccountsPage />) },
-              { path: "/business/journal", element: withSuspense(<JournalEntriesPage />) },
-              { path: "/business/ledger", element: withSuspense(<GeneralLedgerPage />) },
-              { path: "/business/statements", element: withSuspense(<BusinessStatementsPage />) },
-              { path: "/business/customers", element: withSuspense(<CustomersPage />) },
-              { path: "/business/suppliers", element: withSuspense(<SuppliersPage />) },
-              { path: "/business/products", element: withSuspense(<ProductsPage />) },
-              { path: "/business/sales", element: withSuspense(<SalesPage />) },
-              { path: "/business/purchases", element: withSuspense(<PurchasesPage />) },
-              { path: "/business/insights", element: withSuspense(<BusinessInsightsPage />) },
-              { path: "/business/planning", element: withSuspense(<BusinessPlanningPage />) },
-              { path: "/business/forecast", element: withSuspense(<BusinessForecastPage />) },
-              { path: "/business/team", element: withSuspense(<BusinessTeamPage />) },
-              { path: "/business/more", element: withSuspense(<MorePage />) },
+              { path: "/", element: withSuspense(<DashboardPage />) },
+              { path: "/transactions", element: withSuspense(<TransactionsPage />) },
+              { path: "/reports", element: withSuspense(<ReportsPage />) },
+              { path: "/insights", element: withSuspense(<InsightsPage />) },
+              { path: "/categories", element: withSuspense(<CategoriesPage />) },
+              { path: "/settings", element: withSuspense(<SettingsPage />) },
+              { path: "/more", element: withSuspense(<MorePage />) },
+              { path: "/notifications", element: withSuspense(<NotificationsPage />) },
+              { path: "/notifications/:id", element: withSuspense(<NotificationDetailPage />) },
+              { path: "/business/onboarding", element: withSuspense(<BusinessOnboardingPage />) },
+              {
+                element: <RequireBusiness />,
+                children: [
+                  { path: "/business", element: withSuspense(<BusinessDashboardPage />) },
+                  { path: "/business/accounts", element: withSuspense(<ChartOfAccountsPage />) },
+                  { path: "/business/journal", element: withSuspense(<JournalEntriesPage />) },
+                  { path: "/business/ledger", element: withSuspense(<GeneralLedgerPage />) },
+                  { path: "/business/statements", element: withSuspense(<BusinessStatementsPage />) },
+                  { path: "/business/customers", element: withSuspense(<CustomersPage />) },
+                  { path: "/business/suppliers", element: withSuspense(<SuppliersPage />) },
+                  { path: "/business/products", element: withSuspense(<ProductsPage />) },
+                  { path: "/business/sales", element: withSuspense(<SalesPage />) },
+                  { path: "/business/purchases", element: withSuspense(<PurchasesPage />) },
+                  { path: "/business/insights", element: withSuspense(<BusinessInsightsPage />) },
+                  { path: "/business/planning", element: withSuspense(<BusinessPlanningPage />) },
+                  { path: "/business/forecast", element: withSuspense(<BusinessForecastPage />) },
+                  { path: "/business/team", element: withSuspense(<BusinessTeamPage />) },
+                  { path: "/business/more", element: withSuspense(<MorePage />) },
+                ],
+              },
             ],
           },
         ],
