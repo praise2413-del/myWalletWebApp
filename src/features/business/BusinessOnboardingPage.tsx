@@ -24,18 +24,22 @@ export default function BusinessOnboardingPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<BusinessOnboardingInput>({
     resolver: zodResolver(businessOnboardingSchema),
     defaultValues: {
       name: "",
       businessType: "OTHER",
+      businessTypeOther: "",
       industry: "",
       currency: "TZS",
       financialYearStartMonth: 1,
       accountingBasis: "CASH",
     },
   });
+
+  const businessType = watch("businessType");
 
   useEffect(() => {
     document.title = "Set up Business — myWallet";
@@ -108,6 +112,15 @@ export default function BusinessOnboardingPage() {
                 {...register("industry")}
               />
             </div>
+
+            {businessType === "OTHER" && (
+              <TextField
+                label="Please specify"
+                placeholder="e.g. Event Planning"
+                error={errors.businessTypeOther?.message}
+                {...register("businessTypeOther")}
+              />
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <TextField

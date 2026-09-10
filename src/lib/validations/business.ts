@@ -21,15 +21,38 @@ export const FINANCIAL_YEAR_MONTH_OPTIONS = [
   "July", "August", "September", "October", "November", "December",
 ].map((label, index) => ({ value: index + 1, label }));
 
-export const businessOnboardingSchema = z.object({
-  name: z.string().trim().min(1, "Enter a business name").max(80, "Name is too long"),
-  businessType: z.enum([
-    "RETAIL", "RESTAURANT", "CONSULTING", "FREELANCER",
-    "CONSTRUCTION", "SERVICES", "MANUFACTURING", "OTHER",
-  ]),
-  industry: z.string().trim().max(80, "Industry is too long"),
-  currency: z.string().trim().min(1, "Enter a currency code").max(8, "Currency code is too long"),
-  financialYearStartMonth: z.number().int().min(1).max(12),
-  accountingBasis: z.enum(["CASH", "ACCRUAL"]),
-});
+export const businessOnboardingSchema = z
+  .object({
+    name: z.string().trim().min(1, "Enter a business name").max(80, "Name is too long"),
+    businessType: z.enum([
+      "RETAIL", "RESTAURANT", "CONSULTING", "FREELANCER",
+      "CONSTRUCTION", "SERVICES", "MANUFACTURING", "OTHER",
+    ]),
+    businessTypeOther: z.string().trim().max(80, "This is too long"),
+    industry: z.string().trim().max(80, "Industry is too long"),
+    currency: z.string().trim().min(1, "Enter a currency code").max(8, "Currency code is too long"),
+    financialYearStartMonth: z.number().int().min(1).max(12),
+    accountingBasis: z.enum(["CASH", "ACCRUAL"]),
+  })
+  .superRefine((values, ctx) => {
+    if (values.businessType === "OTHER" && values.businessTypeOther.trim().length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["businessTypeOther"],
+        message: "Tell us what kind of business this is",
+      });
+    }
+  });
 export type BusinessOnboardingInput = z.infer<typeof businessOnboardingSchema>;
+
+/** The business type as shown to a user — "Other" resolves to whatever they specified. */
+export function businessTypeLabel(business: { businessType: string; businessTypeOther: string }): string {
+  if (business.businessType === "OTHER" && business.businessTypeOther.trim()) {
+    return business.businessTypeOther.trim();
+  }
+  return labelForBusinessType(business.businessType);
+}
+
+function labelForBusinessType(value: string): string {
+  return BUSINESS_TYPE_OPTIONS.find((o) => o.value === value)?.label ?? value;
+}

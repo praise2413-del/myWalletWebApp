@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { StatCard } from "@/components/ui/StatCard";
 import { useBusinessDashboardData } from "@/features/business/hooks/useBusinessDashboardData";
 import { useBusiness } from "@/hooks/useBusiness";
-import { ACCOUNTING_BASIS_OPTIONS, BUSINESS_TYPE_OPTIONS } from "@/lib/validations/business";
+import { ACCOUNTING_BASIS_OPTIONS, businessTypeLabel } from "@/lib/validations/business";
 
 function labelFor(options: readonly { value: string; label: string }[], value: string) {
   return options.find((o) => o.value === value)?.label ?? value;
@@ -25,7 +25,7 @@ export default function BusinessDashboardPage() {
       <PageHeader
         title={activeBusiness.name}
         description="Business Dashboard · This Month"
-        actions={<Badge tone="primary">{labelFor(BUSINESS_TYPE_OPTIONS, activeBusiness.businessType)}</Badge>}
+        actions={<Badge tone="primary">{businessTypeLabel(activeBusiness)}</Badge>}
       />
 
       {error && (

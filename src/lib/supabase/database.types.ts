@@ -152,6 +152,7 @@ export type Database = {
         Row: {
           accounting_basis: Database["public"]["Enums"]["accounting_basis"]
           business_type: Database["public"]["Enums"]["business_type"]
+          business_type_other: string
           created_at: string
           currency: string
           financial_year_start_month: number
@@ -164,6 +165,7 @@ export type Database = {
         Insert: {
           accounting_basis?: Database["public"]["Enums"]["accounting_basis"]
           business_type?: Database["public"]["Enums"]["business_type"]
+          business_type_other?: string
           created_at?: string
           currency?: string
           financial_year_start_month?: number
@@ -176,6 +178,7 @@ export type Database = {
         Update: {
           accounting_basis?: Database["public"]["Enums"]["accounting_basis"]
           business_type?: Database["public"]["Enums"]["business_type"]
+          business_type_other?: string
           created_at?: string
           currency?: string
           financial_year_start_month?: number

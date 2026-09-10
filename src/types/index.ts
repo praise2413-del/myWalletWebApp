@@ -77,6 +77,8 @@ export interface Business {
   ownerId: string;
   name: string;
   businessType: BusinessType;
+  /** What "Other" means, when businessType is OTHER. Empty otherwise. */
+  businessTypeOther: string;
   industry: string;
   currency: string;
   /** 1 = January ... 12 = December. */

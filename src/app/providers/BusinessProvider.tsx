@@ -14,6 +14,7 @@ function toBusiness(row: {
   owner_id: string;
   name: string;
   business_type: Business["businessType"];
+  business_type_other: string;
   industry: string;
   currency: string;
   financial_year_start_month: number;
@@ -26,6 +27,7 @@ function toBusiness(row: {
     ownerId: row.owner_id,
     name: row.name,
     businessType: row.business_type,
+    businessTypeOther: row.business_type_other,
     industry: row.industry,
     currency: row.currency,
     financialYearStartMonth: row.financial_year_start_month,
@@ -114,6 +116,7 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
           owner_id: user.id,
           name: input.name,
           business_type: input.businessType,
+          business_type_other: input.businessType === "OTHER" ? input.businessTypeOther.trim() : "",
           industry: input.industry ?? "",
           currency: input.currency,
           financial_year_start_month: input.financialYearStartMonth,
